@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DMK Smart 1.1 · Leia primeiro</title>
+<style>
+:root{--bg:#f2f6fa;--card:#fff;--ink:#16293b;--muted:#5d7083;--line:#dbe4ed;--blue:#0b6fd1;--soft:#e8f2fc;--green:#0b8a57;--amber:#a86a12;--red:#c2353f}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:920px;margin:auto;padding:20px 16px 60px}
+header{background:linear-gradient(135deg,#0f2f4a,#155f96);color:#fff;border-radius:20px;padding:26px 26px 22px;margin-bottom:18px}
+header small{letter-spacing:.12em;opacity:.8;font-weight:700}header h1{margin:6px 0 4px;font-size:30px;line-height:1.2}header p{margin:0;opacity:.88}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}nav a{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:14px;color:var(--blue);text-decoration:none;font-weight:600}
+section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-bottom:16px}
+h2{margin:0 0 10px;font-size:21px}h3{margin:18px 0 6px;font-size:17px}
+p{margin:8px 0}ol,ul{margin:8px 0;padding-left:22px}li{margin:4px 0}
+code,kbd{font-family:ui-monospace,Consolas,monospace;background:#eef3f8;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:.92em}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px}th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}th{background:#f6f9fc;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.steps{counter-reset:s;list-style:none;padding:0}.steps>li{counter-increment:s;position:relative;padding:4px 0 10px 46px}
+.steps>li::before{content:counter(s);position:absolute;left:0;top:2px;width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;display:grid;place-items:center}
+.note{border-left:4px solid var(--blue);background:var(--soft);padding:10px 14px;border-radius:8px;margin:10px 0}
+.warn{border-left-color:var(--amber);background:#fff6e6}.ok{border-left-color:var(--green);background:#e9f7f0}
+.prio{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:10px 0}
+.prio div{border:1px solid var(--line);border-radius:14px;padding:12px}.prio b{display:block;font-size:17px}.prio span{color:var(--muted);font-size:14px}
+.led{display:inline-block;width:12px;height:12px;border-radius:50%;background:#1f6fff;box-shadow:0 0 8px #1f6fff;margin-right:6px;vertical-align:middle}
+.led.off{background:#c9d6e3;box-shadow:none}
+.blink{animation:b 1s steps(1) infinite}.fast{animation:b .2s steps(1) infinite}
+@keyframes b{50%{background:#c9d6e3;box-shadow:none}}
+footer{color:var(--muted);text-align:center;font-size:13px}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <small>DMK SOLUÇÕES SMART · VERSÃO 1.1.0</small>
+  <h1>SERVE + CONTROLE — instalação limpa</h1>
+  <p>Mesma lógica da 1.0.0, agora com ESP‑NOW, comunicação cifrada, LED azul de status e atualização pelo GitHub.</p>
+</header>
+
+<nav>
+  <a href="#rapido">Instalação rápida</a><a href="#parear">Parear</a><a href="#comunicacao">Comunicação</a>
+  <a href="#led">LED azul</a><a href="#github">Atualizar pelo GitHub</a><a href="#seguranca">Segurança</a>
+  <a href="#pinos">Pinos</a><a href="#problemas">Problemas</a>
+</nav>
+
+<section id="rapido">
+  <h2>Instalação rápida (Windows)</h2>
+  <ol class="steps">
+    <li><b>Instale o Python 3.9+</b> em <code>python.org</code> marcando <i>“Add python.exe to PATH”</i>.</li>
+    <li>Dê dois cliques em <b>DMK.bat</b> → opção <kbd>1</kbd> <b>Preparar ferramentas</b>. Ele instala o PlatformIO numa pasta só do projeto (<code>.venv</code>). Na primeira compilação baixa os compiladores — precisa de internet.</li>
+    <li>Conecte o <b>SERVE</b> no USB → opção <kbd>2</kbd> → escolha a placa (ESP32, ESP32‑S3 ou ESP8266) → digite a porta (ex.: <code>COM5</code>) → <b>S</b> para instalação limpa.</li>
+    <li>No celular, conecte no Wi‑Fi <code>DMK-SERVE-xxxxxx</code> (senha <code>12345678</code>). O painel abre sozinho (ou <code>http://192.168.4.1</code>). Configure Wi‑Fi, MQTT e <b>troque a senha do painel</b>.</li>
+    <li>Conecte o <b>CONTROLE</b> no USB → opção <kbd>3</kbd>. Ligue os dois perto um do outro: na primeira vez eles <b>pareiam sozinhos</b> e o controle já recebe o Wi‑Fi e o MQTT do SERVE.</li>
+  </ol>
+  <div class="note ok"><b>Só uma gravação.</b> O painel web agora vai dentro do firmware — não existe mais a etapa “uploadfs”. E a atualização pela internet atualiza firmware e painel juntos.</div>
+</section>
+
+<section id="parear">
+  <h2>Parear o controle com o SERVE</h2>
+  <p>O pareamento cria uma chave secreta só desses aparelhos (troca de chaves X25519). Sem ela, nenhum comando é aceito.</p>
+  <table>
+    <tr><th>Onde</th><th>Como</th></tr>
+    <tr><td><b>SERVE</b></td><td>Segure o botão <b>BOOT/FLASH</b> por <b>3 s</b> e solte (abre 2 minutos). Ou no painel: <i>Sistema → Parear controle</i>.<br>Na primeira instalação (nenhum controle pareado) a janela já abre sozinha por 3 minutos.</td></tr>
+    <tr><td><b>CONTROLE</b></td><td>Segure <b>BOMBA + LUZ juntos por 3 s</b>. Ou no painel do controle: <i>Parear com o SERVE</i>.<br>Controle novo procura o SERVE sozinho ao ligar.</td></tr>
+  </table>
+  <p>Durante o pareamento o LED azul pisca rápido e o LCD mostra <code>PAREANDO...</code>. O controle procura o SERVE em todos os canais Wi‑Fi (1 a 13).</p>
+  <div class="note">Com a opção <i>“Enviar Wi‑Fi e MQTT para o controle ao parear”</i> (ligada de fábrica) o controle reinicia já conectado na mesma rede e broker. Os dados vão cifrados.</div>
+  <h3>Botão do SERVE (BOOT/FLASH)</h3>
+  <ul><li>Soltar entre 3 e 30 s → <b>pareamento</b></li><li>Segurar 30 s → <b>ponto de acesso de configuração</b> (como na 1.0.0)</li></ul>
+  <h3>Botões do CONTROLE</h3>
+  <ul><li>BOMBA ou LUZ (toque curto) → liga/desliga</li><li>BOMBA + LUZ por 3 s → pareamento</li><li>MENU: toque = próxima tela · 5 s = liga/desliga LCD · 30 s = ponto de acesso</li></ul>
+</section>
+
+<section id="comunicacao">
+  <h2>Como o controle fala com o SERVE</h2>
+  <div class="prio">
+    <div><b>1º ESP‑NOW</b><span>Direto entre as placas, sem roteador, em ~20 ms. Funciona até sem internet.</span></div>
+    <div><b>2º Rede local</b><span>Pelo mesmo Wi‑Fi (UDP), se o ESP‑NOW não responder em 0,35 s.</span></div>
+    <div><b>3º MQTT</b><span>Pelo broker (como na 1.0.0), se a rede local não responder em 0,7 s.</span></div>
+  </div>
+  <p>A escolha é automática a cada comando. O SERVE continua executando tudo pela mesma fila de antes: proteção de tensão, histórico, automações e “bomba sempre desliga ao reiniciar”.</p>
+  <p>O aplicativo remoto (<code>app/APPDMK-UNIFICADO.html</code>) e os tópicos MQTT continuam iguais.</p>
+  <div class="note warn"><b>ESP‑NOW e canal Wi‑Fi:</b> as duas placas precisam estar no mesmo canal. Se as duas usam o mesmo roteador, isso é automático. Se o controle não tem Wi‑Fi, ele acompanha o canal do SERVE sozinho.</div>
+</section>
+
+<section id="led">
+  <h2>LED azul de status (as duas placas)</h2>
+  <table>
+    <tr><th>LED</th><th>CONTROLE</th><th>SERVE</th></tr>
+    <tr><td><span class="led"></span>aceso fixo</td><td>ligado ao SERVE por ESP‑NOW</td><td>Wi‑Fi + MQTT ok</td></tr>
+    <tr><td><span class="led"></span>aceso, 1 piscada a cada 2 s</td><td>usando a rede local</td><td>Wi‑Fi ok, sem MQTT</td></tr>
+    <tr><td><span class="led"></span>aceso, 2 piscadas a cada 2 s</td><td>usando só MQTT</td><td>—</td></tr>
+    <tr><td><span class="led blink"></span>pisca lento</td><td>sem comunicação / procurando</td><td>sem Wi‑Fi (ESP‑NOW continua)</td></tr>
+    <tr><td><span class="led fast"></span>pisca rápido</td><td colspan="2">pareamento aberto</td></tr>
+    <tr><td><span class="led off"></span>2 flashes curtos</td><td colspan="2">ponto de acesso de configuração aberto</td></tr>
+    <tr><td><span class="led fast"></span>pisca-pisca muito rápido</td><td colspan="2">atualizando firmware — não desligue</td></tr>
+  </table>
+  <p>ESP32 e ESP8266 usam o LED azul da própria placa (GPIO2). No ESP32‑S3 é o LED RGB da placa em azul (GPIO48; na DevKitC v1.1 troque para 38 em <code>PinsConfig.h</code>).</p>
+</section>
+
+<section id="github">
+  <h2>Atualizar pelo GitHub (botões e servidor)</h2>
+  <h3>Uma vez só</h3>
+  <ol>
+    <li>Crie conta em <code>github.com</code> e um repositório <b>público</b> vazio (ex.: <code>dmk-smart</code>).</li>
+    <li>Instale o <b>Git</b> (<code>git-scm.com</code>).</li>
+    <li>DMK.bat → <kbd>5</kbd> <b>Configurar GitHub</b> → digite <code>seu-usuario/dmk-smart</code>.</li>
+  </ol>
+  <h3>A cada versão nova</h3>
+  <ol>
+    <li>Faça as alterações e rode DMK.bat → <kbd>6</kbd> <b>Nova versão</b> (SERVE, CONTROLE ou os dois — as versões são independentes).</li>
+    <li>DMK.bat → <kbd>7</kbd> <b>Publicar no GitHub</b>. O GitHub compila as 6 placas e cria a <i>Release</i> com os <code>.bin</code> e o <code>manifest.json</code> (5–10 min).</li>
+    <li>Abra <b>Atualizações</b> (DMK.bat → <kbd>8</kbd>, ou <code>http://IP-DA-PLACA/ota-mqtt</code>), selecione as placas, <b>Verificar</b> e <b>Atualizar selecionadas</b>. Funciona de outra cidade pelo MQTT.</li>
+  </ol>
+  <div class="note">Cada placa baixa só o arquivo dela, confere o modelo, o SHA‑256 e nunca volta para versão anterior. No SERVE a bomba e a luz são desligadas antes de gravar. Também existe a opção <b>instalar sozinho</b> (o SERVE só instala com a bomba desligada).</div>
+  <p>As placas verificam novas versões a cada 6 horas. Firmware compilado pelo GitHub já vem com o repositório certo; compilado no PC usa o que está em <code>dmk-github.txt</code> (ou configure no painel).</p>
+</section>
+
+<section id="seguranca">
+  <h2>O que mudou na segurança</h2>
+  <ul>
+    <li><b>ESP‑NOW e rede local cifrados e autenticados</b> (HMAC‑SHA256 com chave do pareamento). Quadro alterado ou repetido é recusado.</li>
+    <li><b>Comando gravado não funciona depois</b>: cada comando leva a “sessão” atual do SERVE, que muda a cada reinício e a cada 10 minutos.</li>
+    <li><b>Painel web com senha</b> para tudo que altera algo (ligar bomba, salvar, parear, atualizar): usuário <code>admin</code> + senha do painel. Pelo ponto de acesso de configuração não pede (precisa do botão físico).</li>
+    <li><b>Atualização por MQTT sem enviar a senha</b>: o painel assina cada comando (HMAC); validade de 5 minutos.</li>
+    <li><b>OTA confiável</b>: HTTPS com certificados raiz embutidos, SHA‑256 conferido, sem downgrade.</li>
+    <li><b>Comando MQTT retido no broker é ignorado</b> também no ESP8266.</li>
+    <li>Aviso no painel enquanto a senha ainda for a padrão <code>12345678</code>.</li>
+  </ul>
+  <div class="note warn"><b>Broker público:</b> <code>broker.hivemq.com</code> é aberto — quem souber o tópico consegue publicar. Use um tópico difícil de adivinhar ou um broker com usuário/senha. ESP‑NOW e rede local não dependem do broker.</div>
+  <p>Perdeu um controle? Painel do SERVE → <i>Sistema → Trocar chave</i> e pareie de novo os controles que ficaram.</p>
+</section>
+
+<section id="pinos">
+  <h2>Pinos por placa</h2>
+  <h3>SERVE</h3>
+  <table>
+    <tr><th>Função</th><th>ESP32</th><th>ESP32‑S3</th><th>ESP8266</th></tr>
+    <tr><td>Fases R / S / T (ZMPT)</td><td>34 / 35 / 32</td><td>1 / 2 / 3</td><td>A0 / – / –</td></tr>
+    <tr><td>Relé bomba / luz</td><td>26 / 25</td><td>4 / 5</td><td>5 (D1) / 4 (D2)</td></tr>
+    <tr><td>Fluxo / corrente / temp. / chuva</td><td>27 / 36 / 33 / 39</td><td>6 / 7 / 8 / 9</td><td>12 (D6) / – / – / –</td></tr>
+    <tr><td>Alarme / botão BOOT</td><td>19 / 0</td><td>10 / 0</td><td>13 (D7) / 0 (D3)</td></tr>
+    <tr><td><b>LED de status</b></td><td><b>2</b></td><td><b>48 (RGB)</b></td><td><b>2 (D4)</b></td></tr>
+  </table>
+  <h3>CONTROLE</h3>
+  <table>
+    <tr><th>Função</th><th>ESP32</th><th>ESP32‑S3</th><th>ESP8266</th></tr>
+    <tr><td>Botão bomba / luz / menu</td><td>27 / 32 / 33</td><td>4 / 5 / 6</td><td>14 (D5) / 12 (D6) / 13 (D7)</td></tr>
+    <tr><td>LED bomba / luz</td><td>25 / 26</td><td>7 / 8</td><td>16 (D0) / <b>15 (D8)</b></td></tr>
+    <tr><td>LCD I²C SDA / SCL</td><td>21 / 22</td><td>15 / 16</td><td>4 (D2) / 5 (D1)</td></tr>
+    <tr><td><b>LED de status</b></td><td><b>2</b></td><td><b>48 (RGB)</b></td><td><b>2 (D4)</b></td></tr>
+  </table>
+  <p class="note warn">No CONTROLE com ESP8266 o LED da luz mudou de D4 para <b>D8</b> (D4 virou o LED azul de status).</p>
+  <p>Mapas completos em <code>include/serve/PinsConfig.h</code> e <code>include/controle/PinsConfig.h</code>.</p>
+</section>
+
+<section id="problemas">
+  <h2>Problemas comuns</h2>
+  <table>
+    <tr><th>Sintoma</th><th>O que fazer</th></tr>
+    <tr><td>DMK.bat não acha a porta COM</td><td>Use cabo USB de <b>dados</b> e instale o driver CH340 ou CP210x. Opção <kbd>P</kbd> lista as portas.</td></tr>
+    <tr><td>Gravação falha</td><td>O DMK.bat tenta de novo mais devagar. Se persistir, segure <b>BOOT</b> na placa quando aparecer “Connecting…”.</td></tr>
+    <tr><td>Controle não pareia</td><td>Deixe as placas a menos de 5 m. No SERVE solte o BOOT entre 3 e 30 s (LED pisca rápido). Se o controle estiver em outro roteador/canal, pareie antes de configurar o Wi‑Fi dele.</td></tr>
+    <tr><td>LED do controle com 2 piscadas</td><td>Está indo por MQTT: ESP‑NOW e rede local não responderam. Confira distância e se os dois estão no mesmo roteador.</td></tr>
+    <tr><td>“Nenhuma versão publicada”</td><td>A Release ainda não terminou no GitHub (aba <i>Actions</i>) ou o repositório está privado/errado.</td></tr>
+    <tr><td>ESP8266 falha ao baixar do GitHub</td><td>HTTPS no ESP8266 usa muita RAM. Use “Enviar arquivo .bin” no painel local com o arquivo da Release.</td></tr>
+    <tr><td>Painel pede usuário e senha</td><td>Usuário <code>admin</code>, senha do painel (a mesma da OTA; padrão <code>12345678</code> — troque!).</td></tr>
+  </table>
+  <p>Detalhes técnicos (protocolo, arquivos, testes): <code>documentacao/TECNICO.md</code>.</p>
+</section>
+
+<footer>DMK Soluções Smart · SERVE e CONTROLE 1.1.0 · ESP32 · ESP32‑S3 · ESP8266</footer>
+</main>
+</body>
+</html>

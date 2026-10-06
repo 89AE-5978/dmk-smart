@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb">
+  <title>DMK Smart</title>
+  <style>
+    :root {
+      --blue: #1769e0;
+      --blue-soft: #eaf2ff;
+      --green: #0d9d66;
+      --red: #dc4b54;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #e4e9f1;
+      --card: #fff;
+      --bg: #f5f7fb
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, Arial, sans-serif;
+      padding-bottom: 84px
+    }
+
+    .app {
+      max-width: 680px;
+      margin: auto;
+      padding: 16px
+    }
+
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: #f5f7fbdd;
+      backdrop-filter: blur(12px);
+      padding: 10px 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .brand {
+      display: flex;
+      gap: 10px;
+      align-items: center
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--blue);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      box-shadow: 0 8px 20px #1769e055
+    }
+
+    .brand b {
+      display: block;
+      font-size: 17px
+    }
+
+    .brand small {
+      color: var(--muted)
+    }
+
+    .chip {
+      font-size: 12px;
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: #e7f8ef;
+      color: #087e50;
+      font-weight: 700
+    }
+
+    .chip.off {
+      background: #fff1f2;
+      color: #be3440
+    }
+
+    .screen {
+      display: none;
+      animation: fade .2s
+    }
+
+    .screen.active {
+      display: block
+    }
+
+    @keyframes fade {
+      from {
+        opacity: .2;
+        transform: translateY(4px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1769e0, #4f91ed);
+      color: white;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 16px 36px #1769e033
+    }
+
+    .hero small {
+      opacity: .85
+    }
+
+    .hero h1 {
+      margin: 7px 0 2px;
+      font-size: 23px
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: .9;
+      font-size: 13px
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 14px 0
+    }
+
+    .card {
+      transition: transform .18s ease, box-shadow .18s ease;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 15px;
+      box-shadow: 0 3px 12px #1e2a3a08
+    }
+
+    .card:hover { transform: translateY(-1px); box-shadow: 0 8px 22px #1e2a3a10 }
+
+    .card.full {
+      grid-column: 1/-1
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em
+    }
+
+    .value {
+      font-size: 23px;
+      font-weight: 800;
+      margin-top: 8px
+    }
+
+    .small-value {
+      font-size: 15px;
+      font-weight: 700;
+      margin-top: 7px;
+      overflow-wrap: anywhere
+    }
+
+    .good {
+      color: var(--green)
+    }
+
+    .bad {
+      color: var(--red)
+    }
+
+    .section-title {
+      margin: 22px 2px 10px;
+      font-size: 16px
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 14px;
+      background: var(--blue);
+      color: white;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer
+    }
+
+    .btn:disabled {
+      opacity: .45
+    }
+
+    .btn.red {
+      background: var(--red)
+    }
+
+    .btn.light {
+      background: var(--blue-soft);
+      color: var(--blue)
+    }
+
+    .notice {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 14px 2px
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      margin: 15px 0 6px
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      font-size: 15px;
+      color: var(--ink)
+    }
+
+    select { width:100%; padding:13px; border:1px solid var(--line); border-radius:12px; background:#fff; font-size:15px; color:var(--ink) }
+    .lcd-preview { background:#324436; border:8px solid #152217; border-radius:12px; color:#d8f7a8; font:700 15px/1.45 monospace; letter-spacing:.04em; padding:10px; white-space:pre; overflow:hidden; box-shadow:inset 0 0 18px #0008; min-height:112px; margin-top:14px }
+    .lcd-preview.off { background:#141714; color:#2d3b2d; box-shadow:inset 0 0 18px #000 }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px
+    }
+
+    .switch {
+      position: relative;
+      width: 52px;
+      height: 30px;
+      flex: none
+    }
+
+    .switch input {
+      display: none
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #cdd5df;
+      border-radius: 99px;
+      transition: .2s
+    }
+
+    .slider:before {
+      content: '';
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      left: 4px;
+      top: 4px;
+      border-radius: 50%;
+      background: white;
+      transition: .2s;
+      box-shadow: 0 2px 4px #0002
+    }
+
+    .switch input:checked+.slider {
+      background: var(--green)
+    }
+
+    .switch input:checked+.slider:before {
+      transform: translateX(22px)
+    }
+
+    .network {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 13px;
+      padding: 12px;
+      text-align: left;
+      margin: 7px 0;
+      cursor: pointer
+    }
+
+    .network b {
+      display: block
+    }
+
+    .network small {
+      color: var(--muted)
+    }
+
+    .nav {
+      position: fixed;
+      z-index: 10;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px calc(max(14px, env(safe-area-inset-right))) calc(8px + env(safe-area-inset-bottom))
+    }
+
+    .nav button {
+      border: 0;
+      background: transparent;
+      color: #778294;
+      padding: 8px 20px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .nav button span {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 2px
+    }
+
+    .nav button.active {
+      color: var(--blue)
+    }
+
+    .ota {
+      border: 1px dashed #9db8dd;
+      background: #f7fbff;
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 15px
+    }
+
+    @media(max-width:380px) {
+      .nav button {
+        padding: 8px 13px
+      }
+
+      .app {
+        padding: 12px
+      }
+    }
+  
+    .btn.loading{position:relative;pointer-events:none;opacity:.78}
+    .spinner{display:inline-block;width:16px;height:16px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:7px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .status-banner{display:flex;align-items:center;gap:10px;margin:12px 0;padding:11px 13px;border-radius:14px;font-size:13px;font-weight:700}
+    .status-banner.online{background:#e9f8f1;color:#087e50}.status-banner.offline{background:#fff1f2;color:#b93843}.status-banner.local{background:#eef4ff;color:#175cb8}
+    .modal-backdrop{position:fixed;inset:0;z-index:9999;display:none;place-items:center;padding:18px;background:#11182788;backdrop-filter:blur(5px)}
+    .modal-backdrop.show{display:grid}.modal-card{width:min(430px,100%);background:#fff;border-radius:20px;box-shadow:0 24px 70px #0004;padding:20px;border:1px solid var(--line)}
+    .modal-icon{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:25px;background:var(--blue-soft);margin-bottom:12px}
+    .modal-card h3{margin:0 0 7px;font-size:19px}.modal-card p{margin:0;color:var(--muted);line-height:1.45}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.modal-actions .btn{padding:11px 15px}
+    .token-help{margin-top:12px;padding:12px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-size:12px;color:var(--muted)}
+    .token-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.token{border:1px solid #cfd8e6;background:#fff;color:#334155;border-radius:999px;padding:6px 9px;cursor:pointer;font:700 12px monospace}
+    .alias-row{display:grid;grid-template-columns:1fr 1.3fr auto;gap:8px;align-items:end;margin-top:10px}.alias-row label{margin:0 0 5px}.alias-row .btn{padding:12px}
+    @media(max-width:520px){.alias-row{grid-template-columns:1fr 1fr}.alias-row .btn{grid-column:1/-1}}
+
+  
+    .lcd-config-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:10px;align-items:end}
+    .lcd-config-grid label{margin-top:0}
+    .lcd-line-card{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px;background:#fbfcfe}
+    .lcd-line-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:7px}
+    .lcd-counter{font-size:11px;font-weight:800;color:var(--muted)}
+    .lcd-counter.over{color:var(--red)}
+    .lcd-input{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+    .lcd-size-note{font-size:12px;color:var(--muted);margin-top:8px}
+    .lcd-token-section{margin-top:14px}
+    .lcd-preview-title{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .pill{font-size:11px;font-weight:800;background:var(--blue-soft);color:var(--blue);padding:5px 8px;border-radius:999px}
+    @media(max-width:560px){.lcd-config-grid{grid-template-columns:1fr 1fr}.lcd-config-grid>div:first-child{grid-column:1/-1}}
+
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">⚙</div>
+        <div><b id="brandName">DMK Smart</b><small id="deviceLabel">Carregando dispositivo…</small></div>
+      </div><span id="connection" class="chip">Conectando</span>
+    </header>
+    <div id="statusBanner" class="status-banner local">
+      <span id="statusBannerIcon">◉</span>
+      <span id="statusBannerText">Painel local carregado. Verificando comunicação…</span>
+    </div>
+
+    <section id="home" class="screen active">
+      <div class="hero"><small>CONTROLE REMOTO</small>
+        <h1 id="heroTitle">Bomba e Luz</h1>
+        <p id="heroText">Lendo informações do ESP…</p>
+      </div>
+      <h2 class="section-title">Controles</h2>
+      <div class="actions"><button id="pumpButton" class="btn" onclick="command('pump')" disabled>💧
+          Bomba</button><button id="lightButton" class="btn light" onclick="command('light')" disabled>💡 Luz</button>
+      </div>
+      <p id="message" class="notice">Aguardando conexão.</p>
+      <div id="passwordWarn" class="card" style="display:none;border-color:#f5c26b;background:#fff8e8;margin-bottom:12px">
+        <b>Segurança:</b> a senha do painel ainda é a padrão (12345678). Troque em Wi‑Fi → “Nova senha OTA”.
+      </div>
+      <div class="card" style="margin-bottom:6px">
+        <div class="row"><b>Conexão com o SERVE</b><span id="linkVia" class="pill">--</span></div>
+        <div class="notice" id="linkDetail" style="margin:8px 0">--</div>
+        <div class="actions">
+          <button class="btn light" type="button" id="pairButton" onclick="pairToggle()">🔗 Parear com o SERVE</button>
+          <button class="btn light" type="button" onclick="forgetPair()">Esquecer pareamento</button>
+        </div>
+        <p class="notice" style="margin-bottom:0">Sem celular: segure <b>BOMBA + LUZ</b> por 3 s no controle e <b>BOOT</b> por 3 s no SERVE. LED azul: fixo = ESP‑NOW · 1 piscada = rede local · 2 piscadas = MQTT · rápido = pareando.</p>
+      </div>
+      <h2 class="section-title">Estado atual</h2>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Bomba</div>
+          <div id="pump" class="value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">Luz</div>
+          <div id="light" class="value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">Alarme</div>
+          <div id="alarm" class="value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">Fluxo</div>
+          <div id="flow" class="value">--</div>
+        </div>
+      </div>
+      <h2 class="section-title">Sensores</h2>
+      <div class="grid">
+        <div class="card">
+          <div class="label">Fase R</div>
+          <div id="vR" class="small-value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">Fase S</div>
+          <div id="vS" class="small-value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">Fase T</div>
+          <div id="vT" class="small-value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">Corrente</div>
+          <div id="current" class="small-value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">Temperatura</div>
+          <div id="temperature" class="small-value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">Total de água</div>
+          <div id="total" class="small-value">--</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="wifi" class="screen">
+      <div class="hero"><small>REDE E ACESSO</small>
+        <h1>Wi‑Fi</h1>
+        <p>Escolha uma rede ou informe os dados manualmente.</p>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <div class="row">
+          <div><b>Ponto de acesso local</b>
+            <div class="notice" id="apText">Verificando…</div>
+          </div><label class="switch"><input id="apSwitch" type="checkbox" onchange="setAp(this.checked)"><span
+              class="slider"></span></label>
+        </div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div class="row"><b>Redes disponíveis</b><button id="wifiScanButton" class="btn light" style="padding:9px 12px" type="button" onclick="scanWifi()">↻ Buscar redes</button></div>
+        <div id="networks" class="notice">Toque em Buscar para listar as redes.</div>
+      </div>
+      <form class="card" style="margin-top:12px" method="POST" action="/save"><b>Configurar conexão</b><label>Nome da
+          rede Wi‑Fi</label><input id="ssid" name="ssid" required><label>Senha Wi‑Fi</label><input name="pass"
+          type="password" placeholder="Manter senha atual"><label>Servidor MQTT</label><input id="mqttHost"
+          name="mqttHost" required><label>Porta MQTT</label><input id="mqttPort" name="mqttPort" type="number" min="1"
+          max="65535" required><label>Tópico MQTT base</label><input id="mqttTopic" name="topic" required>
+          <label>Usuário MQTT</label><input id="mqttUser" name="mqttUser" autocomplete="username" placeholder="Opcional para broker público">
+          <label>Senha MQTT</label><input id="mqttPass" name="mqttPass" type="password" autocomplete="current-password" placeholder="Manter senha MQTT atual">
+          <label>Client ID MQTT</label><input id="mqttClient" name="mqttClient" placeholder="Vazio = automático e único">
+          <label class="row"><span>Apagar senha MQTT salva</span><input id="clearMqttPass" name="clearMqttPass" value="true" type="checkbox" style="width:auto"></label>
+          <div class="notice">As credenciais MQTT são salvas no dispositivo. A senha nunca é devolvida pela API/status.</div>
+          <label>Nova senha OTA</label><input name="otaPass" type="password" minlength="8" placeholder="Manter senha atual"><button
+          class="btn" style="margin-top:18px;width:100%" type="submit">Salvar e reiniciar</button></form>
+    </section>
+
+    <section id="system" class="screen">
+      <div class="hero"><small>INFORMAÇÕES NATIVAS</small>
+        <h1>Sistema</h1>
+        <p>Dados recebidos diretamente do ESP.</p>
+      </div>
+      <div class="grid">
+        <div class="card full">
+          <div class="label">Nome / ID</div>
+          <div id="nativeName" class="small-value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">IP local</div>
+          <div id="ip" class="small-value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">Sinal Wi‑Fi</div>
+          <div id="wifiRssi" class="small-value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">MQTT</div>
+          <div id="mqttState" class="small-value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">Tempo ligado</div>
+          <div id="uptime" class="small-value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">CPU</div>
+          <div id="cpu" class="small-value">--</div>
+        </div>
+        <div class="card">
+          <div class="label">Memória livre</div>
+          <div id="heap" class="small-value">--</div>
+        </div>
+        <div class="card full">
+          <div class="label">MAC / Flash / PSRAM</div>
+          <div id="chipInfo" class="small-value">--</div>
+        </div>
+        <div class="card full">
+          <div class="label">Firmware / tópico</div>
+          <div id="firmware" class="small-value">--</div>
+          <div id="topicInfo" class="notice"></div>
+        </div>
+      </div>
+      <form class="card" id="lcdForm">
+        <b>🖥 Personalização do LCD</b>
+        <p class="notice">Escolha o tamanho real do seu display. O sistema cria exatamente a quantidade de linhas e nunca envia mais caracteres que o LCD suporta.</p>
+
+        <div class="lcd-config-grid">
+          <div>
+            <label>Modelo / tamanho</label>
+            <select id="lcdPreset">
+              <option value="16x2">16 × 2</option>
+              <option value="16x4">16 × 4</option>
+              <option value="20x2">20 × 2</option>
+              <option value="20x4">20 × 4</option>
+              <option value="custom">Personalizado</option>
+            </select>
+          </div>
+          <div>
+            <label>Colunas</label>
+            <input id="lcdCols" name="columns" type="number" min="8" max="40" value="16">
+          </div>
+          <div>
+            <label>Linhas</label>
+            <input id="lcdRows" name="rows" type="number" min="1" max="4" value="4">
+          </div>
+        </div>
+        <div class="lcd-size-note">Suportado: 8–40 colunas e 1–4 linhas. Presets comuns: 16×2, 16×4, 20×2 e 20×4.</div>
+
+        <label class="row"><span>Usar texto personalizado</span><input id="lcdCustom" name="custom" type="checkbox" style="width:auto"></label>
+        <label class="row"><span>LCD ligado</span><input id="lcdEnabled" name="enabled" type="checkbox" style="width:auto" checked></label>
+
+        <div id="lcdLines"></div>
+
+        <div class="token-help lcd-token-section">
+          <b>Variáveis dinâmicas</b>
+          <div>Você pode usar variáveis em <b>qualquer linha</b>. O valor é atualizado pelo firmware em tempo real.</div>
+          <div id="tokenList" class="token-list"></div>
+          <div style="margin-top:10px">
+            <button type="button" class="btn light" style="width:100%" onclick="loadRemoteParameters()">↻ Carregar todas as variáveis recebidas por MQTT</button>
+          </div>
+          <div id="mqttTokenList" class="token-list"></div>
+          <p class="notice">Também funciona digitando diretamente uma chave MQTT: <code>{nome_da_chave}</code>.</p>
+        </div>
+
+        <button class="btn" style="margin-top:15px;width:100%">Salvar configuração do LCD</button>
+
+        <div class="lcd-preview-title" style="margin-top:18px">
+          <div class="label">Prévia do LCD</div>
+          <span id="lcdGeometryBadge" class="pill">16×4</span>
+        </div>
+        <div id="lcdPreview" class="lcd-preview">Carregando LCD...</div>
+        <p id="lcdMessage" class="notice"></p>
+      </form>
+      <div class="ota" style="margin-bottom:12px"><b>☁ Atualizar pelo GitHub</b>
+        <p class="notice">Verifique e instale a última versão publicada. A placa baixa só o arquivo dela e confere o SHA‑256.</p>
+        <a class="btn" style="display:block;text-align:center;text-decoration:none" href="/ota-mqtt">Abrir atualizações</a>
+      </div>
+      <div class="ota"><b>⬆ Atualização OTA</b>
+        <p class="notice">Envie apenas o arquivo `.bin` deste projeto. O navegador pedirá usuário <b>admin</b> e a senha
+          OTA configurada.</p>
+        <form method="POST" action="/update" enctype="multipart/form-data"><input type="file" name="firmware"
+            accept=".bin" required><button class="btn" style="margin-top:12px;width:100%">Atualizar firmware</button>
+        </form>
+      </div>
+    </section>
+  </main>
+  <nav class="nav"><button class="active" data-tab="home"
+      onclick="showTab('home',this)"><span>⌂</span>Painel</button><button data-tab="wifi"
+      onclick="showTab('wifi',this)"><span>⌁</span>Wi‑Fi</button><button data-tab="system"
+      onclick="showTab('system',this)"><span>ⓘ</span>Sistema</button></nav>
+  <div id="appModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="appModalTitle">
+    <div class="modal-card">
+      <div id="appModalIcon" class="modal-icon">ℹ️</div>
+      <h3 id="appModalTitle">Aviso</h3>
+      <p id="appModalText"></p>
+      <div class="modal-actions">
+        <button id="appModalCancel" class="btn light" type="button">Cancelar</button>
+        <button id="appModalOk" class="btn" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+  <script src="/app-config.js"></script>
+  <script>
+    let state=null,busy=false,networkFormInitialized=false,lastTelemetry={},lcdLoadedLines=['','','',''];
+    const $=id=>document.getElementById(id);
+    const val=(id,text,cls='')=>{const e=$(id);if(!e)return;e.textContent=text;e.className=e.className.replace(/\bgood\b|\bbad\b/g,'').trim()+(cls?' '+cls:'')};
+    const n=(v,unit,d=1)=>Number.isFinite(Number(v))?Number(v).toFixed(d)+' '+unit:'-- '+unit;
+
+    function showModal(title,text,type='info',confirm=false){
+      return new Promise(resolve=>{
+        const m=$('appModal');$('appModalTitle').textContent=title;$('appModalText').textContent=text;
+        $('appModalIcon').textContent=type==='error'?'⚠️':type==='success'?'✅':type==='question'?'❓':'ℹ️';
+        $('appModalCancel').style.display=confirm?'':'none';m.classList.add('show');
+        const close=v=>{m.classList.remove('show');$('appModalOk').onclick=null;$('appModalCancel').onclick=null;resolve(v)};
+        $('appModalOk').onclick=()=>close(true);$('appModalCancel').onclick=()=>close(false);
+      });
+    }
+
+    function setBanner(mode,text){const b=$('statusBanner');b.className='status-banner '+mode;$('statusBannerText').textContent=text;$('statusBannerIcon').textContent=mode==='online'?'●':mode==='offline'?'●':'◉'}
+
+    function showTab(tab,button){
+      document.querySelectorAll('.screen').forEach(x=>x.classList.toggle('active',x.id===tab));
+      document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x===button));
+      if(tab==='wifi'&&!$('networks').dataset.loaded)scanWifi();
+    }
+
+    function canControl(target,d){
+      const explicit=target==='pump'?d.can_pump:d.can_light;
+      if(typeof explicit==='boolean')return explicit;
+      return !!d.communication_ok;
+    }
+
+    function render(d){
+      state=d;
+      const ready=!!d.communication_ok,con=$('connection');
+      const via={espnow:'ESP‑NOW',lan:'Rede local',mqtt:'MQTT'}[d.link]||'';
+      con.textContent=ready?'● '+via:d.pairing?'● Pareando':d.wifi?'● Wi‑Fi conectado':'● Sem link';con.classList.toggle('off',!ready);
+      if(d.pairing)setBanner('local',`Pareando… no SERVE segure BOOT 3 s e solte. Restam ${d.pair_remaining_s||0} s.`);
+      else if(ready)setBanner('online',`Online pelo ${via}. Ordem de uso: ESP‑NOW → rede local → MQTT.`);
+      else if(!d.paired)setBanner('offline','Controle ainda não pareado. Toque em “Parear com o SERVE”.');
+      else if(d.wifi)setBanner('local','Wi‑Fi ativo, procurando o SERVE (ESP‑NOW, rede local e MQTT).');
+      else setBanner('offline','Procurando o SERVE por ESP‑NOW…');
+      renderLink(d);
+
+      $('deviceLabel').textContent=`${d.device_name||'DMK Smart'} · ${d.chip_id||'--'}`;
+      $('heroText').textContent=d.wifi?`IP: ${d.ip||'--'} · Wi‑Fi: ${d.wifi_ssid||'--'} · ${d.wifi_rssi??'--'} dBm`:'Configure o Wi‑Fi para iniciar.';
+      val('pump',d.pump_known?(d.pump?'LIGADA':'DESLIGADA'):'SEM DADOS',d.pump?'good':'');
+      val('light',d.light_known?(d.light?'LIGADA':'DESLIGADA'):'SEM DADOS',d.light?'good':'');
+      val('alarm',d.alarm?'ATIVO':'NORMAL',d.alarm?'bad':'good');val('flow',n(d.flow_l_min,'L/min',2));val('vR',n(d.vR,'V'));val('vS',n(d.vS,'V'));val('vT',n(d.vT,'V'));val('current',n(d.current_a,'A',2));val('temperature',n(d.temperature_c,'°C'));val('total',n(d.total_l,'L',1));
+
+      for(const [target,id,label] of [['pump','pumpButton','💧 '+(d.pump?'Desligar bomba':'Ligar bomba')],['light','lightButton','💡 '+(d.light?'Desligar luz':'Ligar luz')]]){
+        const b=$(id);b.textContent=label;b.disabled=busy||!canControl(target,d);b.classList.toggle('red',target==='pump'&&d.pump);b.classList.toggle('light',target==='light'&&!d.light)
+      }
+
+      $('apSwitch').checked=!!d.ap_active;$('apText').textContent=d.ap_active?`Ativo em ${d.ap_ip} · clientes: ${d.ap_clients||0} · fecha em ${formatTime(d.ap_idle_remaining_s||0)} se ficar sem cliente`:'Desativado';
+      if(!networkFormInitialized){$('ssid').value=d.wifi_ssid||'';$('mqttHost').value=d.mqtt_host||'broker.hivemq.com';$('mqttPort').value=d.mqtt_port||1883;$('mqttTopic').value=d.mqtt_topic||'';$('mqttUser').value=d.mqtt_username||'';$('mqttClient').value=d.mqtt_client_id||'';networkFormInitialized=true}
+      $('nativeName').textContent=`${d.device_name||'--'} · Chip ${d.chip_id||'--'}`;$('ip').textContent=d.ip||'--';$('wifiRssi').textContent=n(d.wifi_rssi,'dBm',0);$('mqttState').textContent=d.mqtt?'Conectado':'Desconectado';$('uptime').textContent=formatTime(d.uptime_s||0);$('cpu').textContent=(d.cpu_mhz||'--')+' MHz';$('heap').textContent=Math.round((d.heap_free||0)/1024)+' KB';$('chipInfo').textContent=`MAC ${d.mac||'--'} · Flash ${Math.round((d.flash_size||0)/1048576)} MB · PSRAM ${Math.round((d.psram_size||0)/1048576)} MB`;$('firmware').textContent=`v${d.version||'--'} · Principal v${d.main_version||'--'}`;$('topicInfo').textContent=d.mqtt_topic||'--';
+      renderLcdPreview();
+    }
+
+    function renderLink(d){
+      const via={espnow:'ESP‑NOW',lan:'Rede local',mqtt:'MQTT',none:'Sem link'}[d.link]||'--';
+      $('linkVia').textContent=d.pairing?'Pareando':via;
+      const age=v=>v==null?'—':v+' s';
+      $('linkDetail').textContent=d.paired
+        ?`SERVE ${d.serve_mac||'--'} · IP ${d.serve_ip||'--'} · canal ${d.channel||'--'} · último sinal: ESP‑NOW ${age(d.espnow_age_s)}, rede ${age(d.lan_age_s)}, MQTT ${age(d.mqtt_age_s)}`
+        :'Nenhum SERVE pareado.';
+      $('pairButton').textContent=d.pairing?'✖ Cancelar pareamento':'🔗 Parear com o SERVE';
+      $('passwordWarn').style.display=d.default_password?'block':'none';
+    }
+
+    async function pairToggle(){
+      const off=state&&state.pairing;
+      try{const d=await fetchJson('/api/pair',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'state='+(off?'OFF':'ON')});await showModal('Pareamento',d.message||'OK','success')}
+      catch(e){await showModal('Pareamento',e.message||'Falha','error')}
+    }
+
+    async function forgetPair(){
+      if(!await showModal('Esquecer pareamento','O controle deixa de falar com o SERVE por ESP‑NOW/rede local até parear de novo. Continuar?','question',true))return;
+      try{const d=await fetchJson('/api/pair/forget',{method:'POST'});await showModal('Pareamento',d.message||'OK','success')}
+      catch(e){await showModal('Pareamento',e.message||'Falha','error')}
+    }
+
+    function formatTime(s){s=Number(s)||0;return`${Math.floor(s/3600)}h ${Math.floor(s%3600/60)}m`}
+
+    async function fetchJson(url,options={},timeoutMs=7000){
+      const c=new AbortController(),t=setTimeout(()=>c.abort(),timeoutMs);
+      try{const r=await fetch(url,{cache:'no-store',...options,signal:c.signal});const text=await r.text();let d={};try{d=text?JSON.parse(text):{}}catch{d={message:text}}if(!r.ok)throw new Error(d.error||d.message||`HTTP ${r.status}`);return d}finally{clearTimeout(t)}
+    }
+
+    async function poll(){
+      try{render(await fetchJson('/api/status',{},5000))}
+      catch(e){$('connection').textContent='● Sem comunicação';$('connection').classList.add('off');setBanner('offline','Sem comunicação com o ESP. A interface continua disponível em modo local.')}
+      finally{setTimeout(poll,(window.APP_CONFIG&&window.APP_CONFIG.pollIntervalMs)||2000)}
+    }
+
+    async function command(target){
+      if(!state||busy)return;
+      const known=target==='pump'?state.pump_known:state.light_known;
+      if(!known){await showModal('Estado desconhecido','Aguarde receber o estado atual antes de enviar o comando.','error');return}
+      const current=target==='pump'?!!state.pump:!!state.light,next=!current,label=target==='pump'?'bomba':'luz';
+      if(!await showModal(next?`Ligar ${label}`:`Desligar ${label}`,`Confirma ${next?'ligar':'desligar'} ${label}?`,'question',true))return;
+      busy=true;render(state);
+      try{
+        const d=await fetchJson('/api/'+target,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'state='+(next?'ON':'OFF')});
+        $('message').textContent=d.message||'Comando enviado.';await showModal('Comando enviado',d.message||`Comando para ${label} enviado.`,'success');
+        try{render(await fetchJson('/api/status',{},3500))}catch{}
+      }catch(e){$('message').textContent='Falha ao enviar comando.';await showModal('Falha no comando',e.message||'Não foi possível enviar o comando.','error')}
+      finally{busy=false;if(state)render(state)}
+    }
+
+    async function scanWifi(){
+      const box=$('networks'),btn=$('wifiScanButton');
+      btn.disabled=true;btn.classList.add('loading');btn.innerHTML='<span class="spinner"></span>Buscando';
+      box.innerHTML='<div class="notice"><span class="spinner"></span>Procurando redes próximas…</div>';
+
+      const started=Date.now();
+      try{
+        while(Date.now()-started<22000){
+          const d=await fetchJson('/api/wifi/scan',{},5000);
+          if(d.scanning){
+            await new Promise(r=>setTimeout(r,700));
+            continue;
+          }
+
+          const nets=Array.isArray(d.networks)?d.networks:[];
+          box.dataset.loaded='1';
+          if(!nets.length){box.textContent='Nenhuma rede encontrada.';return}
+
+          box.innerHTML=nets.sort((a,b)=>Number(b.rssi||-999)-Number(a.rssi||-999)).map(x=>`<button type="button" class="network" data-ssid="${escapeAttr(x.ssid||'')}"><b>${escapeHtml(x.ssid||'(SSID oculto)')} ${x.secure?'🔒':'🔓'}</b><small>${Number(x.rssi||0)} dBm</small></button>`).join('');
+          box.querySelectorAll('.network').forEach(b=>b.addEventListener('click',()=>chooseSsid(b.dataset.ssid||'')));
+          return;
+        }
+        throw new Error('Tempo limite da busca excedido');
+      }catch(e){
+        box.textContent='Não foi possível procurar redes.';
+        await showModal('Busca de Wi‑Fi',e.message||'Falha ao procurar redes.','error');
+      }finally{
+        btn.disabled=false;btn.classList.remove('loading');btn.textContent='↻ Buscar redes';
+      }
+    }
+
+    function chooseSsid(ssid){$('ssid').value=ssid;$('ssid').focus();showModal('Rede selecionada',`SSID selecionado: ${ssid}`,'success')}
+    function escapeHtml(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;')}
+    function escapeAttr(v){return escapeHtml(v)}
+
+    async function setAp(on){
+      try{const d=await fetchJson('/api/ap',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'state='+(on?'ON':'OFF')});$('apText').textContent=d.message||'Atualizado'}
+      catch(e){$('apSwitch').checked=!on;$('apText').textContent='Não foi possível alterar o AP';await showModal('Ponto de acesso',e.message||'Não foi possível alterar o AP.','error')}
+    }
+
+    const BUILTIN_TOKENS={
+      RSSI:'wifi_rssi',SSID:'wifi_ssid',IP:'ip',MQTT:'mqtt',
+      MQTT_HOST:'mqtt_host',MQTT_TOPIC:'mqtt_topic',
+      BOMBA:'pump',LUZ:'light',VR:'vR',VS:'vS',VT:'vT',
+      CORRENTE:'current_a',TEMP:'temperature_c',FLUXO:'flow_l_min',
+      TOTAL:'total_l',CHUVA:'rain_pct',ALARME:'alarm',ESP_RSSI:'rssi',
+      ADC_R:'adcVrmsR',ADC_S:'adcVrmsS',ADC_T:'adcVrmsT'
+    };
+
+    function lcdGeometry(){
+      let cols=Math.max(8,Math.min(40,Number($('lcdCols').value)||16));
+      let rows=Math.max(1,Math.min(4,Number($('lcdRows').value)||4));
+      return {cols,rows};
+    }
+
+    function syncLcdPreset(){
+      const {cols,rows}=lcdGeometry(), key=`${cols}x${rows}`;
+      $('lcdPreset').value=['16x2','16x4','20x2','20x4'].includes(key)?key:'custom';
+      $('lcdGeometryBadge').textContent=`${cols}×${rows}`;
+    }
+
+    function createLcdLineInputs(){
+      const {cols,rows}=lcdGeometry(),box=$('lcdLines'),values=[];
+      for(let i=0;i<4;i++){
+        const old=$('lcd'+(i+1));
+        values[i]=old?old.value:(lcdLoadedLines[i]||'');
+      }
+      box.innerHTML='';
+      for(let i=0;i<rows;i++){
+        const wrap=document.createElement('div');wrap.className='lcd-line-card';
+        wrap.innerHTML=`<div class="lcd-line-head"><b>Linha ${i+1}</b><span id="lcdCount${i+1}" class="lcd-counter">0/${cols}</span></div>
+          <input id="lcd${i+1}" name="line${i+1}" class="lcd-input" maxlength="96" placeholder="Ex.: SINAL {RSSI}">`;
+        box.appendChild(wrap);
+        const input=$('lcd'+(i+1));input.value=values[i]||'';
+        input.addEventListener('input',()=>{updateLcdCounter(i+1);renderLcdPreview()});
+      }
+      syncLcdPreset();
+      renderLcdPreview();
+    }
+
+    function valueFromSource(source){
+      const merged={...(lastTelemetry||{}),...(state||{})};let v=merged[source];
+      if(v===undefined||v===null)return'--';
+      if(source==='pump'||source==='light'||source==='alarm')return v?'ON':'OFF';
+
+      // Tensões RMS sempre inteiras na prévia do LCD.
+      if(['vR','vS','vT','adcVrmsR','adcVrmsS','adcVrmsT'].includes(source)){
+        const voltage=Number(v);
+        return Number.isFinite(voltage)?String(Math.round(voltage)):'--';
+      }
+
+      return String(v);
+    }
+
+    function resolveTemplate(text){
+      return String(text||'').replace(/\{([A-Za-z0-9_.-]+)\}/g,(_,raw)=>{
+        const upper=raw.toUpperCase(),source=BUILTIN_TOKENS[upper]||raw;
+        return valueFromSource(source);
+      });
+    }
+
+    function updateLcdCounter(lineNo){
+      const input=$('lcd'+lineNo);if(!input)return;
+      const {cols}=lcdGeometry(),resolved=resolveTemplate(input.value),count=resolved.length,c=$('lcdCount'+lineNo);
+      c.textContent=`${Math.min(count,999)}/${cols}`;
+      c.classList.toggle('over',count>cols);
+      c.title=count>cols?'O firmware cortará o excedente para proteger o LCD.':'Dentro do limite do LCD.';
+    }
+
+    function insertToken(name){
+      const active=document.activeElement;
+      const input=active&&/^lcd[1-4]$/.test(active.id)?active:$('lcd1');
+      if(!input)return;
+      const token=`{${name}}`,start=input.selectionStart??input.value.length,end=input.selectionEnd??input.value.length;
+      input.value=input.value.slice(0,start)+token+input.value.slice(end);
+      input.focus();input.selectionStart=input.selectionEnd=start+token.length;
+      updateLcdCounter(Number(input.id.replace('lcd','')));renderLcdPreview();
+    }
+
+    function renderTokenButtons(){
+      $('tokenList').innerHTML=Object.keys(BUILTIN_TOKENS).map(name=>`<button type="button" class="token" data-token="${escapeAttr(name)}">{${escapeHtml(name)}}</button>`).join('');
+      $('tokenList').querySelectorAll('.token').forEach(b=>b.onclick=()=>insertToken(b.dataset.token));
+    }
+
+    function renderMqttTokenButtons(data){
+      const keys=Object.keys(data||{}).filter(k=>!Object.values(BUILTIN_TOKENS).includes(k)).slice(0,60);
+      $('mqttTokenList').innerHTML=keys.length
+        ? keys.map(k=>`<button type="button" class="token" data-token="${escapeAttr(k)}">{${escapeHtml(k)}}</button>`).join('')
+        : '<span class="notice">Nenhuma variável MQTT extra recebida ainda.</span>';
+      $('mqttTokenList').querySelectorAll('.token').forEach(b=>b.onclick=()=>insertToken(b.dataset.token));
+    }
+
+    function renderLcdPreview(){
+      const {cols,rows}=lcdGeometry(),on=$('lcdEnabled').checked,custom=$('lcdCustom').checked,p=$('lcdPreview');
+      const defaults=['MODO MONITORAMENTO','TELAS DE SENSORES','BOTOES: CONTROLE','DMK SMART'];
+      const lines=[];
+      for(let i=1;i<=rows;i++){
+        const input=$('lcd'+i),raw=custom?(input?input.value:''):defaults[i-1]||'';
+        const resolved=resolveTemplate(raw);
+        lines.push(resolved.slice(0,cols).padEnd(cols,' '));
+        updateLcdCounter(i);
+      }
+      p.textContent=lines.join('\n');p.classList.toggle('off',!on);
+      p.style.fontSize=cols>=30?'10px':cols>=20?'13px':'15px';
+      $('lcdGeometryBadge').textContent=`${cols}×${rows}`;
+    }
+
+    async function loadLcd(){
+      try{
+        const d=await fetchJson('/api/lcd');
+        $('lcdEnabled').checked=!!d.enabled;
+        $('lcdCols').value=d.columns||16;
+        $('lcdRows').value=d.rows||4;
+        $('lcdCustom').checked=!!d.custom;
+        lcdLoadedLines=(d.lines||[]).slice(0,4);
+        while(lcdLoadedLines.length<4)lcdLoadedLines.push('');
+        createLcdLineInputs();
+      }catch(e){
+        $('lcdMessage').textContent='Não foi possível ler o LCD';
+        createLcdLineInputs();
+      }
+    }
+    $('lcdForm').onsubmit=async e=>{
+      e.preventDefault();
+      const {cols,rows}=lcdGeometry(),f=new URLSearchParams();
+      f.set('enabled',$('lcdEnabled').checked?'true':'false');
+      f.set('custom',$('lcdCustom').checked?'true':'false');
+      f.set('columns',String(cols));
+      f.set('rows',String(rows));
+      for(let i=1;i<=4;i++)f.set('line'+i,$('lcd'+i)?$('lcd'+i).value:(lcdLoadedLines[i-1]||''));
+      try{
+        const d=await fetchJson('/api/lcd',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:f});
+        $('lcdMessage').textContent=d.message||'LCD salvo';
+        await showModal('LCD atualizado',d.message||`Configuração ${cols}×${rows} salva.`,'success');
+        lcdLoadedLines=[1,2,3,4].map(i=>$('lcd'+i)?$('lcd'+i).value:'');
+        renderLcdPreview();
+      }catch(e){
+        $('lcdMessage').textContent='Erro ao salvar LCD';
+        await showModal('Erro no LCD',e.message||'Não foi possível salvar.','error');
+      }
+    };
+    async function loadRemoteParameters(){
+      try{
+        const d=await fetchJson('/api/telemetry',{},5000);
+        lastTelemetry=d||{};
+        renderMqttTokenButtons(lastTelemetry);
+        renderLcdPreview();
+      }catch(e){
+        $('mqttTokenList').innerHTML='<span class="notice">Nenhum dado MQTT recebido ainda.</span>';
+      }
+    }
+
+    function applyCustom(){const c=window.APP_CONFIG||{},r=document.documentElement;if(c.primaryColor)r.style.setProperty('--blue',c.primaryColor);if(c.primarySoftColor)r.style.setProperty('--blue-soft',c.primarySoftColor);if(c.backgroundColor)r.style.setProperty('--bg',c.backgroundColor);$('brandName').textContent=c.brandName||'DMK Smart';$('heroTitle').textContent=c.homeTitle||'Bomba e Luz';document.title=c.appTitle||'DMK Smart';if(c.showOta===false)document.querySelector('.ota').style.display='none';if(c.showApControl===false)$('apSwitch').closest('.card').style.display='none'}
+
+    window.addEventListener('online',()=>setBanner('local','Navegador online. Verificando o ESP…'));
+    window.addEventListener('offline',()=>setBanner('offline','Navegador sem rede. Interface local continua aberta.'));
+    renderTokenButtons();
+    $('lcdPreset').addEventListener('change',()=>{
+      const v=$('lcdPreset').value;
+      if(v!=='custom'){const [c,r]=v.split('x').map(Number);$('lcdCols').value=c;$('lcdRows').value=r;createLcdLineInputs();}
+    });
+    $('lcdCols').addEventListener('change',createLcdLineInputs);
+    $('lcdRows').addEventListener('change',createLcdLineInputs);
+    $('lcdEnabled').addEventListener('change',renderLcdPreview);
+    $('lcdCustom').addEventListener('change',renderLcdPreview);
+    applyCustom();loadLcd();loadRemoteParameters();poll();
+  </script>
+<a href="/ota-mqtt" style="position:fixed;right:12px;bottom:14px;z-index:1000;background:#123d5a;color:white;padding:12px;border-radius:12px;text-decoration:none">Atualização individual OTA</a></body>
+
+</html>

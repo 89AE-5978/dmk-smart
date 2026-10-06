@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>DMK SOLUÇÕES SMART</title>
+  <link rel="stylesheet" href="/vendor/bootstrap-local.css">
+  <link rel="stylesheet" href="/assets/app.css">
+
+  <style id="dmk-bottom-nav-fix">
+    /* DMK FIX: rodapé sempre em uma única linha e rolável quando necessário */
+    body {
+      padding-bottom: calc(78px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .bottom-nav {
+      position: fixed !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      z-index: 9999 !important;
+
+      width: 100% !important;
+      height: calc(74px + env(safe-area-inset-bottom)) !important;
+      min-height: 74px !important;
+
+      padding: 0 6px env(safe-area-inset-bottom) !important;
+
+      background: rgba(255, 255, 255, .98) !important;
+      border-top: 1px solid #dfe7ef !important;
+      box-shadow: 0 -6px 18px rgba(25, 55, 75, .10) !important;
+
+      overflow: hidden !important;
+    }
+
+    .bottom-nav .bottom-nav-inner {
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 74px !important;
+      margin: 0 !important;
+
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      align-items: stretch !important;
+      justify-content: flex-start !important;
+
+      gap: 2px !important;
+
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior-x: contain !important;
+      scrollbar-width: none !important;
+      touch-action: pan-x !important;
+      white-space: nowrap !important;
+    }
+
+    .bottom-nav .bottom-nav-inner::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      display: none !important;
+    }
+
+    .bottom-nav .nav-btn {
+      flex: 1 0 84px !important;
+      min-width: 84px !important;
+      max-width: none !important;
+      width: auto !important;
+      height: 74px !important;
+
+      display: flex !important;
+      flex-direction: column !important;
+      flex-wrap: nowrap !important;
+      align-items: center !important;
+      justify-content: center !important;
+
+      gap: 4px !important;
+      padding: 5px 8px !important;
+      margin: 0 !important;
+
+      border: 0 !important;
+      white-space: nowrap !important;
+      overflow: visible !important;
+    }
+
+    .bottom-nav .nav-btn svg {
+      width: 22px !important;
+      height: 22px !important;
+      min-width: 22px !important;
+      min-height: 22px !important;
+      flex: 0 0 22px !important;
+    }
+
+    .bottom-nav .nav-btn span {
+      display: block !important;
+      width: auto !important;
+      white-space: nowrap !important;
+      line-height: 1.1 !important;
+      font-size: 11px !important;
+    }
+
+    @media (max-width: 620px) {
+      .bottom-nav .nav-btn {
+        flex: 0 0 78px !important;
+        min-width: 78px !important;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <symbol id="i-home" viewBox="0 0 24 24">
+        <path d="M3 11.2 12 4l9 7.2" />
+        <path d="M5.5 10v9h13v-9" />
+        <path d="M9.5 19v-5h5v5" />
+      </symbol>
+      <symbol id="i-wifi" viewBox="0 0 24 24">
+        <path d="M4 9.5a12.5 12.5 0 0 1 16 0" />
+        <path d="M7 13a8 8 0 0 1 10 0" />
+        <path d="M10 16.5a3.5 3.5 0 0 1 4 0" />
+        <path d="M12 20h.01" />
+      </symbol>
+      <symbol id="i-cloud" viewBox="0 0 24 24">
+        <path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 11.8 3.2 3.2 0 0 0 7 18Z" />
+        <path d="M9 14h6" />
+        <path d="M12 11v6" />
+      </symbol>
+      <symbol id="i-sliders" viewBox="0 0 24 24">
+        <path d="M4 6h8" />
+        <path d="M16 6h4" />
+        <path d="M14 4v4" />
+        <path d="M4 12h4" />
+        <path d="M12 12h8" />
+        <path d="M10 10v4" />
+        <path d="M4 18h10" />
+        <path d="M18 18h2" />
+        <path d="M16 16v4" />
+      </symbol>
+      <symbol id="i-cpu" viewBox="0 0 24 24">
+        <rect x="6" y="6" width="12" height="12" rx="2" />
+        <path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3" />
+        <rect x="9" y="9" width="6" height="6" rx="1" />
+      </symbol>
+      <symbol id="i-bolt" viewBox="0 0 24 24">
+        <path d="M13 2 5.5 13H11l-1 9 8.5-12H13Z" />
+      </symbol>
+      <symbol id="i-drop" viewBox="0 0 24 24">
+        <path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z" />
+      </symbol>
+      <symbol id="i-thermo" viewBox="0 0 24 24">
+        <path d="M10 14.8V5a2 2 0 0 1 4 0v9.8a4 4 0 1 1-4 0Z" />
+        <path d="M12 9v7" />
+      </symbol>
+      <symbol id="i-gauge" viewBox="0 0 24 24">
+        <path d="M4 18a8 8 0 1 1 16 0" />
+        <path d="m12 14 4-4" />
+        <path d="M7 18h10" />
+      </symbol>
+      <symbol id="i-light" viewBox="0 0 24 24">
+        <path d="M9 18h6" />
+        <path d="M10 21h4" />
+        <path d="M8.5 14.5A6 6 0 1 1 15.5 14.5c-.8.7-1.5 1.5-1.5 2.5h-4c0-1-.7-1.8-1.5-2.5Z" />
+      </symbol>
+      <symbol id="i-power" viewBox="0 0 24 24">
+        <path d="M12 2v9" />
+        <path d="M7.2 5.8a8 8 0 1 0 9.6 0" />
+      </symbol>
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-4-4" />
+      </symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24">
+        <rect x="5" y="10" width="14" height="10" rx="2" />
+        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+      </symbol>
+      <symbol id="i-save" viewBox="0 0 24 24">
+        <path d="M5 3h12l2 2v16H5Z" />
+        <path d="M8 3v6h8V3" />
+        <path d="M8 15h8v6" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M20 7v5h-5" />
+        <path d="M4 17v-5h5" />
+        <path d="M18.5 9A7 7 0 0 0 6.2 6.3L4 9" />
+        <path d="M5.5 15A7 7 0 0 0 17.8 17.7L20 15" />
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M4 7h16" />
+        <path d="M9 7V4h6v3" />
+        <path d="m7 7 1 14h8l1-14" />
+      </symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24">
+        <path d="M12 16V4" />
+        <path d="m7 9 5-5 5 5" />
+        <path d="M5 20h14" />
+      </symbol>
+      <symbol id="i-x" viewBox="0 0 24 24">
+        <path d="m6 6 12 12M18 6 6 18" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="m5 12 4 4L19 6" />
+      </symbol>
+      <symbol id="i-info" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 11v6M12 7h.01" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"><svg class="icon">
+            <use href="#i-cpu" />
+          </svg></div>
+        <div>
+          <div class="brand-title">DMK SOLUÇÕES SMART</div>
+          <div class="brand-sub" id="deviceSubtitle">ESP32 · iniciando</div>
+        </div>
+      </div>
+      <div class="status-pill"><span class="status-dot" id="onlineDot"></span><span id="onlineText">Conectando</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container page-wrap" id="appRoot">
+    <section class="view active" data-view="home">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Painel</h1>
+          <p class="page-desc">Monitoramento geral do equipamento.</p>
+        </div><span class="badge badge-neutral" id="firmwareBadge">Firmware</span>
+      </div>
+      <div id="modeBanner" class="alert alert-info d-none"></div>
+      <div id="passwordWarn" class="alert alert-warning d-none"><b>Segurança:</b> a senha do painel ainda é a padrão (12345678). Troque em Sistema → Salvar configuração (modo AP).</div>
+      <div class="row">
+        <div class="col-6 col-md-4">
+          <div class="card metric-card">
+            <div class="card-body">
+              <div class="metric-top">
+                <div>
+                  <div class="metric-label">Fase R</div>
+                  <div class="metric-value" id="vR">--</div>
+                </div>
+                <div class="metric-icon"><svg class="icon">
+                    <use href="#i-bolt" />
+                  </svg></div>
+              </div>
+              <div class="metric-note">Volts</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card metric-card">
+            <div class="card-body">
+              <div class="metric-top">
+                <div>
+                  <div class="metric-label">Fase S</div>
+                  <div class="metric-value" id="vS">--</div>
+                </div>
+                <div class="metric-icon"><svg class="icon">
+                    <use href="#i-bolt" />
+                  </svg></div>
+              </div>
+              <div class="metric-note">Volts</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card metric-card">
+            <div class="card-body">
+              <div class="metric-top">
+                <div>
+                  <div class="metric-label">Fase T</div>
+                  <div class="metric-value" id="vT">--</div>
+                </div>
+                <div class="metric-icon"><svg class="icon">
+                    <use href="#i-bolt" />
+                  </svg></div>
+              </div>
+              <div class="metric-note">Volts</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card metric-card">
+            <div class="card-body">
+              <div class="metric-label">Corrente</div>
+              <div class="metric-value" id="currentA">--</div>
+              <div class="metric-note">Ampères</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card metric-card">
+            <div class="card-body">
+              <div class="metric-label">Temperatura</div>
+              <div class="metric-value" id="tempC">--</div>
+              <div class="metric-note">°C</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card metric-card">
+            <div class="card-body">
+              <div class="metric-label">Fluxo</div>
+              <div class="metric-value" id="flowL">--</div>
+              <div class="metric-note">L/min</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card metric-card">
+            <div class="card-body">
+              <div class="metric-label">Chuva</div>
+              <div class="metric-value" id="rainP">--</div>
+              <div class="metric-note">%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card mt-16">
+        <div class="card-body">
+          <h2 class="section-title"><svg class="icon">
+              <use href="#i-power" />
+            </svg>Comandos</h2>
+          <div class="control-grid"><button class="btn btn-success control-btn" id="pumpBtn"><svg class="icon icon-sm">
+                <use href="#i-power" />
+              </svg><span>Ligar bomba</span></button><button class="btn btn-primary control-btn" id="lightBtn"><svg
+                class="icon icon-sm">
+                <use href="#i-light" />
+              </svg><span>Ligar luz</span></button></div>
+          <div class="split mt-12">
+            <div class="control-state"><span class="state-name">Bomba</span><span class="state-value"
+                id="pumpState">--</span></div>
+            <div class="control-state"><span class="state-name">Luz</span><span class="state-value"
+                id="lightState">--</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="configForm">
+      <section class="view" data-view="wifi">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Wi‑Fi</h1>
+            <p class="page-desc">Rede sem fio e acesso ao modo de configuração.</p>
+          </div>
+        </div>
+        <div class="alert alert-warning config-lock" id="configLockWifi"><svg class="icon">
+            <use href="#i-lock" />
+          </svg>
+          <div><b>Configuração protegida</b>
+            <div class="small">Após o ESP iniciar, segure o botão FLASH/BOOT por 30 segundos para abrir o AP. Sem clientes conectados por 5 minutos, o AP fecha automaticamente.</div>
+          </div>
+        </div>
+        <div class="card only-config">
+          <div class="card-body">
+            <h2 class="section-title"><svg class="icon">
+                <use href="#i-wifi" />
+              </svg>Selecionar rede</h2><button class="btn btn-primary" type="button" id="scanBtn"><svg
+                class="icon icon-sm">
+                <use href="#i-search" />
+              </svg><span>Buscar redes Wi‑Fi</span></button>
+            <div class="net-list" id="networkList">
+              <div class="text-muted small">Toque em “Buscar redes Wi‑Fi”.</div>
+            </div>
+            <div class="mt-16"><label class="form-label" for="ssid">SSID selecionado</label><input class="form-control config-field"
+                id="ssid" name="ssid" placeholder="Nome da rede"></div>
+            <div class="mt-12"><label class="form-label" for="wifiPass">Senha do Wi‑Fi</label><input
+                class="form-control config-field" id="wifiPass" type="password" name="wifiPass"
+                placeholder="Deixe em branco para manter a atual"></div>
+            <button class="btn btn-success w-100 mt-16 save-config-btn" type="button" data-save-section="wifi">
+              <svg class="icon icon-sm"><use href="#i-save" /></svg><span>Salvar Wi‑Fi e reiniciar</span>
+            </button>
+          </div>
+        </div>
+        <div class="card mt-16">
+          <div class="card-body">
+            <h2 class="section-title"><svg class="icon">
+                <use href="#i-info" />
+              </svg>Status da rede</h2>
+            <div class="kv"><b>Wi‑Fi</b><span id="wifiStatus">--</span></div>
+            <div class="kv"><b>IP</b><span id="ipStatus">--</span></div>
+            <div class="kv"><b>Sinal</b><span id="rssiStatus">--</span></div>
+            <div class="kv"><b>AP de configuração</b><span id="apStatus">--</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-view="mqtt">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">MQTT</h1>
+            <p class="page-desc">Servidor, credenciais e tópico base.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h2 class="section-title"><svg class="icon">
+                <use href="#i-cloud" />
+              </svg>Conexão MQTT</h2>
+            <div class="row">
+              <div class="col-12 col-md-6"><label class="form-label">Broker / IP</label><input
+                  class="form-control config-field" name="mqttHost" id="mqttHost" placeholder="broker.hivemq.com"></div>
+              <div class="col-6 col-md-3"><label class="form-label">Porta</label><input
+                  class="form-control config-field" type="number" name="mqttPort" id="mqttPort" min="1" max="65535">
+              </div>
+              <div class="col-6 col-md-3"><label class="form-label">Usuário</label><input
+                  class="form-control config-field" name="mqttUser" id="mqttUser"></div>
+              <div class="col-12 col-md-6"><label class="form-label">Senha MQTT</label><input
+                  class="form-control config-field" type="password" name="mqttPass" id="mqttPass"
+                  placeholder="Deixe em branco para manter"></div>
+              <div class="col-12 col-md-6"><label class="form-label">Tópico base</label><input
+                  class="form-control config-field" name="topic" id="topic"></div>
+            </div>
+            <div class="mt-12"><span class="badge badge-neutral" id="mqttBadge">MQTT --</span></div>
+            <button class="btn btn-success w-100 mt-16 save-config-btn" type="button" data-save-section="mqtt">
+              <svg class="icon icon-sm"><use href="#i-save" /></svg><span>Salvar MQTT e reiniciar</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-view="sensors">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Sensores</h1>
+            <p class="page-desc">Calibração e proteção do monitor trifásico.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h2 class="section-title"><svg class="icon">
+                <use href="#i-gauge" />
+              </svg>ZMPT101B</h2>
+            <div class="row">
+              <div class="col-12 col-md-4"><label class="form-label">Fator R</label><input
+                  class="form-control config-field" type="number" step="0.001" name="calR" id="calR"></div>
+              <div class="col-12 col-md-4"><label class="form-label">Fator S</label><input
+                  class="form-control config-field" type="number" step="0.001" name="calS" id="calS"></div>
+              <div class="col-12 col-md-4"><label class="form-label">Fator T</label><input
+                  class="form-control config-field" type="number" step="0.001" name="calT" id="calT"></div>
+            </div>
+            <div class="split mt-12">
+              <div class="control-state"><span>ADC R</span><b id="adcR">--</b></div>
+              <div class="control-state"><span>ADC S</span><b id="adcS">--</b></div>
+              <div class="control-state"><span>ADC T</span><b id="adcT">--</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-16">
+          <div class="card-body">
+            <h2 class="section-title"><svg class="icon">
+                <use href="#i-sliders" />
+              </svg>Proteção e outros sensores</h2><div class="alert alert-info small"><b>Estado seguro:</b> bomba e luz sempre iniciam desligadas. “Ativo em LOW” define somente a polaridade elétrica do módulo; se o relé físico ficar ligado quando o painel mostra OFF, altere essa opção e salve.</div><label class="form-check"><input
+                class="form-check-input config-field" type="checkbox" name="protection" id="protection"><span>Ativar
+                bloqueio por tensão</span></label>
+            <div class="row">
+              <div class="col-6"><label class="form-label">Tensão mínima</label><input class="form-control config-field"
+                  type="number" step="0.1" name="vMin" id="vMin"></div>
+              <div class="col-6"><label class="form-label">Tensão máxima</label><input class="form-control config-field"
+                  type="number" step="0.1" name="vMax" id="vMax"></div>
+              <div class="col-6"><label class="form-label">Corrente (A por Vrms)</label><input
+                  class="form-control config-field" type="number" step="0.001" name="currentCal" id="currentCal"></div>
+              <div class="col-6"><label class="form-label">Fluxo (pulsos/L)</label><input
+                  class="form-control config-field" type="number" step="0.1" name="flowCal" id="flowCal"></div>
+              <div class="col-6"><label class="form-label">Chuva seco (ADC)</label><input
+                  class="form-control config-field" type="number" name="rainDry" id="rainDry"></div>
+              <div class="col-6"><label class="form-label">Chuva molhado (ADC)</label><input
+                  class="form-control config-field" type="number" name="rainWet" id="rainWet"></div>
+            </div><label class="form-check"><input class="form-check-input config-field" type="checkbox" name="relayLow"
+                id="relayLow"><span>Relé da bomba ativo em LOW</span></label><label class="form-check"><input
+                class="form-check-input config-field" type="checkbox" name="lightLow" id="lightLow"><span>Relé da luz
+                ativo em LOW</span></label><label class="form-check"><input class="form-check-input config-field"
+                type="checkbox" name="alarmLow" id="alarmLow"><span>Entrada de alarme ativa em LOW</span></label>
+            <button class="btn btn-success w-100 mt-16 save-config-btn" type="button" data-save-section="sensors">
+              <svg class="icon icon-sm"><use href="#i-save" /></svg><span>Salvar sensores e reiniciar</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      
+      <section class="view" data-view="ota">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Atualização OTA</h1>
+            <p class="page-desc">Atualize localmente ou puxe um firmware de um servidor HTTPS autorizado.</p>
+          </div>
+          <span class="badge badge-neutral" id="otaInstalledBadge">Firmware --</span>
+        </div>
+
+        <div class="alert alert-warning">
+          <b>Segurança:</b> antes de gravar, bomba e luz são desligadas. Não interrompa a alimentação durante a atualização.
+        </div>
+
+        <div class="split mt-16">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="section-title"><svg class="icon"><use href="#i-upload"/></svg>OTA local</h2>
+              <p class="small text-muted">Envie diretamente o <b>firmware.bin</b> compilado para este ESP32.</p>
+
+              <div class="row mt-16">
+                <div class="col-12 col-md-6">
+                  <label class="form-label">Usuário OTA</label>
+                  <input class="form-control" id="otaAuthUser" value="admin" autocomplete="username">
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label">Senha OTA</label>
+                  <input class="form-control" id="otaAuthPass" type="password" autocomplete="current-password">
+                </div>
+              </div>
+
+              <form id="otaLocalForm" class="mt-16">
+                <label class="form-label">Arquivo firmware.bin</label>
+                <input class="form-control" type="file" id="otaLocalFile"
+                       accept=".bin,application/octet-stream" required>
+                <button class="btn btn-primary w-100 mt-16" id="otaLocalBtn" type="submit">
+                  <svg class="icon icon-sm"><use href="#i-upload"/></svg>
+                  Enviar OTA local
+                </button>
+              </form>
+              <div id="otaLocalResult" class="mt-16"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <h2 class="section-title"><svg class="icon"><use href="#i-cloud"/></svg>Atualizar pelo GitHub</h2>
+              <p class="small text-muted">
+                A placa baixa a versão publicada, confere placa, versão e SHA‑256 e só então instala.
+                Nunca volta para versão anterior.
+              </p>
+
+              <form id="otaRemoteConfigForm" class="mt-16">
+                <label class="form-label">Repositório GitHub (usuário/repositório)</label>
+                <input class="form-control" id="otaRepo" placeholder="seu-usuario/dmk-smart" autocomplete="off">
+                <p class="small text-muted mt-6">A placa procura a última versão publicada em <b>Releases</b> desse repositório.</p>
+
+                <details class="mt-12">
+                  <summary class="small">Avançado: servidor próprio</summary>
+                  <label class="form-label mt-12">URL do manifesto (substitui o GitHub)</label>
+                  <input class="form-control" id="otaManifestUrl" placeholder="https://seu-servidor/manifest.json">
+                  <label class="form-check mt-12">
+                    <input class="form-check-input" type="checkbox" id="otaLocalHttp">
+                    <span class="small">Permitir HTTP para IP da rede local (192.168.x.x)</span>
+                  </label>
+                </details>
+
+                <label class="form-check mt-12">
+                  <input class="form-check-input" type="checkbox" id="otaAutoInstall">
+                  <span class="small">Instalar automaticamente quando sair versão nova (somente com a bomba desligada)</span>
+                </label>
+
+                <button class="btn btn-success w-100 mt-16" type="submit" id="otaRemoteSaveBtn">
+                  <svg class="icon icon-sm"><use href="#i-save"/></svg>
+                  Salvar
+                </button>
+              </form>
+
+              <div class="config-actions mt-16">
+                <button class="btn btn-outline" type="button" id="otaRemoteLoadBtn">
+                  Carregar configuração
+                </button>
+                <button class="btn btn-outline" type="button" id="otaRemoteCheckBtn">
+                  Verificar atualização
+                </button>
+              </div>
+
+              <div id="otaRemoteInfo" class="mt-16"></div>
+
+              <button class="btn btn-primary w-100 mt-16" type="button"
+                      id="otaRemoteInstallBtn" disabled>
+                <svg class="icon icon-sm"><use href="#i-cloud"/></svg>
+                Baixar e instalar versão remota
+              </button>
+
+              <label class="form-check mt-12">
+                <input class="form-check-input" type="checkbox" id="otaForceSame">
+                <span class="small">Permitir reinstalar a mesma versão</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-16">
+          <div class="card-body">
+            <h2 class="section-title"><svg class="icon"><use href="#i-info"/></svg>Como publicar uma versão nova</h2>
+            <ol class="small text-muted mb-0">
+              <li>No PC, rode <b>DMK.bat</b> → <b>Nova versão</b> (SERVE, CONTROLE ou ambos).</li>
+              <li>Escolha <b>Publicar no GitHub</b>. O GitHub compila as 6 placas e cria a Release.</li>
+              <li>Aqui, toque em <b>Verificar atualização</b> e depois <b>Instalar</b>. Cada placa baixa só o seu arquivo.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+<section class="view" data-view="system">
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Sistema</h1>
+            <p class="page-desc">Controles remotos, dispositivo e configurações gerais.</p>
+          </div>
+        </div>
+        <div class="card mb-16">
+          <div class="card-body">
+            <h2 class="section-title"><svg class="icon"><use href="#i-power"/></svg>Controles remotos</h2>
+            <p class="small text-muted">Comunicação: <b>ESP‑NOW</b> (direto) → <b>rede local</b> → <b>MQTT</b>. Tudo cifrado com a chave criada no pareamento.</p>
+            <div class="kv"><b>ESP‑NOW</b><span id="linkEspnow">--</span></div>
+            <div class="kv"><b>Canal / MAC</b><span id="linkChannel">--</span></div>
+            <div class="kv"><b>Pareamento</b><span id="linkPairing">--</span></div>
+            <div id="linkControls" class="mt-12 small text-muted">Carregando…</div>
+            <label class="form-check mt-12">
+              <input class="form-check-input" type="checkbox" id="linkShare">
+              <span class="small">Enviar Wi‑Fi e MQTT para o controle ao parear (ele já sai configurado)</span>
+            </label>
+            <div class="config-actions mt-16">
+              <button class="btn btn-primary" type="button" id="linkPairBtn"><svg class="icon icon-sm"><use href="#i-refresh"/></svg>Parear controle</button>
+              <button class="btn btn-outline" type="button" id="linkRekeyBtn"><svg class="icon icon-sm"><use href="#i-lock"/></svg>Trocar chave</button>
+            </div>
+            <p class="small text-muted mt-12 mb-0">Também dá para parear sem o celular: no SERVE segure <b>BOOT</b> 3 s e solte; no controle segure <b>BOMBA + LUZ</b> 3 s. LED azul piscando rápido = pareando.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h2 class="section-title"><svg class="icon">
+                <use href="#i-cpu" />
+              </svg>Dispositivo</h2><label class="form-label">Nome do dispositivo</label><input
+              class="form-control config-field" name="devName" id="devName">
+            <div class="kv mt-12"><b>Firmware</b><span id="fwInfo">--</span></div>
+            <div class="kv"><b>Build</b><span id="buildInfo">--</span></div>
+            <div class="kv"><b>Uptime</b><span id="uptimeInfo">--</span></div>
+          </div>
+        </div>
+        <div class="card mt-16 only-config">
+          <div class="card-body">
+            <h2 class="section-title"><svg class="icon">
+                <use href="#i-save" />
+              </svg>Salvar configuração</h2><label class="form-label">Nova senha OTA (mínimo 8 caracteres)</label><input
+              class="form-control config-field" type="password" name="otaPass" id="otaPass"
+              placeholder="Deixe em branco para manter">
+            <div class="config-actions mt-16"><button class="btn btn-success save-config-btn" id="saveBtn" type="button"><svg
+                  class="icon icon-sm">
+                  <use href="#i-save" />
+                </svg>Salvar e reiniciar</button><button class="btn btn-outline" type="button" data-open-ota><svg class="icon icon-sm">
+                  <use href="#i-upload" />
+                </svg>Atualização OTA</button></div>
+          </div>
+        </div>
+        <div class="card mt-16 danger-zone only-config">
+          <div class="card-body">
+            <h2 class="section-title"><svg class="icon">
+                <use href="#i-trash" />
+              </svg>Restauração</h2>
+            <p class="small text-muted">Apaga Wi‑Fi, MQTT, calibrações, automações, OTA e histórico local.</p><button
+              class="btn btn-danger" type="button" id="factoryBtn"><svg class="icon icon-sm">
+                <use href="#i-trash" />
+              </svg>Restaurar configuração de fábrica</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navegação principal">
+    <div class="bottom-nav-inner">
+      <button class="nav-btn active" data-target="home"><svg class="icon">
+          <use href="#i-home" />
+        </svg><span>Painel</span></button>
+      <button class="nav-btn" data-target="wifi"><svg class="icon">
+          <use href="#i-wifi" />
+        </svg><span>Wi‑Fi</span></button>
+      <button class="nav-btn" data-target="mqtt"><svg class="icon">
+          <use href="#i-cloud" />
+        </svg><span>MQTT</span></button>
+      <button class="nav-btn" data-target="sensors"><svg class="icon">
+          <use href="#i-sliders" />
+        </svg><span>Sensores</span></button>
+      <button class="nav-btn" data-target="ota"><svg class="icon">
+          <use href="#i-upload" />
+        </svg><span>OTA</span></button>
+      <button class="nav-btn" data-target="system"><svg class="icon">
+          <use href="#i-cpu" />
+        </svg><span>Sistema</span></button>
+    </div>
+  </nav>
+
+  <div class="toast-wrap" id="toastWrap"></div>
+  <div class="modal-mask d-none" id="confirmModal">
+    <div class="modal-box">
+      <h3 id="modalTitle">Confirmar</h3>
+      <p class="text-muted" id="modalText"></p>
+      <div class="modal-actions"><button class="btn btn-light" id="modalCancel">Cancelar</button><button
+          class="btn btn-danger" id="modalConfirm">Confirmar</button></div>
+    </div>
+  </div>
+  <script src="/assets/app.js?v=110"></script>
+</body>
+
+</html>

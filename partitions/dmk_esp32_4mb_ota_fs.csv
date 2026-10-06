@@ -1,0 +1,7 @@
+# DMK_META {"name":"ESP32 4 MB - OTA + LittleFS (RECOMENDADO)","flashMB":4,"ota":true,"recommended":true,"notes":"2 slots OTA de 1536 KB e LittleFS de 960 KB. Perfil indicado para a Central ESP32 atual e OTA de remotos."}
+# Name,   Type, SubType, Offset,   Size,     Flags
+nvs,      data, nvs,     0x9000,   0x5000,
+otadata,  data, ota,     0xE000,   0x2000,
+app0,     app,  ota_0,   0x10000,  0x180000,
+app1,     app,  ota_1,   0x190000, 0x180000,
+littlefs, data, spiffs,  0x310000, 0x0F0000,

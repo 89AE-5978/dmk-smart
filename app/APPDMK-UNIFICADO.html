@@ -1,0 +1,3013 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5f9ff">
+  <title>DMK IoT Soluções Smart • App Unificado</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1425;
+      --card: #17243a;
+      --card2: #1c2d47;
+      --line: #30435c;
+      --text: #eef5ff;
+      --muted: #9eb1c9;
+      --blue: #65b9ff;
+      --green: #55d9aa;
+      --red: #ff7686;
+      --yellow: #ffd278
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 80% 0, #1b3553 0, transparent 36%), var(--bg);
+      color: var(--text);
+      font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif
+    }
+
+    button,
+    input,
+    select {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    button:disabled {
+      opacity: .45;
+      cursor: not-allowed
+    }
+
+    .app {
+      max-width: 1160px;
+      margin: auto;
+      padding: 24px 20px 100px
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 26px
+    }
+
+    .brand small {
+      color: var(--blue);
+      letter-spacing: .19em;
+      text-transform: uppercase;
+      font-weight: 800
+    }
+
+    .brand h1 {
+      margin: 2px 0 0;
+      font-size: clamp(27px, 5vw, 40px);
+      letter-spacing: -.05em;
+      line-height: 1.1
+    }
+
+    .badge {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #1a2b43;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap
+    }
+
+    .badge.ok {
+      color: var(--green);
+      border-color: #39745f
+    }
+
+    .badge.bad {
+      color: var(--red);
+      border-color: #79505b
+    }
+
+    .badge.warn {
+      color: var(--yellow);
+      border-color: #756545
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      overflow: auto;
+      margin-bottom: 22px;
+      padding: 4px;
+      background: #112038;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      width: max-content;
+      max-width: 100%
+    }
+
+    .nav button {
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--muted);
+      padding: 10px 16px;
+      font-weight: 700;
+      white-space: nowrap
+    }
+
+    .nav button.active {
+      background: #2b486a;
+      color: white
+    }
+
+    .page {
+      display: none
+    }
+
+    .page.active {
+      display: block
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px
+    }
+
+    .card {
+      background: linear-gradient(155deg, var(--card), #132138);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 21px;
+      box-shadow: 0 12px 40px #0002
+    }
+
+    .card h2 {
+      font-size: 18px;
+      margin: 0 0 4px;
+      letter-spacing: -.02em
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted)
+    }
+
+    .span4 {
+      grid-column: span 4
+    }
+
+    .span6 {
+      grid-column: span 6
+    }
+
+    .span8 {
+      grid-column: span 8
+    }
+
+    .span12 {
+      grid-column: span 12
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #1d4e75, #172b4d 55%, #202a4c)
+    }
+
+    .hero-top,
+    .between {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px
+    }
+
+    .hero h2 {
+      font-size: clamp(22px, 3vw, 30px);
+      margin: 14px 0 5px
+    }
+
+    .hero p {
+      max-width: 610px
+    }
+
+    .metric {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -.05em;
+      margin: 12px 0 0
+    }
+
+    .metric small {
+      font-size: 15px;
+      color: var(--muted);
+      letter-spacing: 0
+    }
+
+    .phases {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 18px
+    }
+
+    .phase {
+      background: #0d1c31a8;
+      border: 1px solid #49617d;
+      border-radius: 16px;
+      padding: 14px
+    }
+
+    .phase strong {
+      display: block;
+      font-size: 27px;
+      margin-top: 5px
+    }
+
+    .phase small {
+      color: var(--muted)
+    }
+
+    .statusline {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 17px;
+      flex-wrap: wrap
+    }
+
+    .primary,
+    .secondary,
+    .danger {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-weight: 800
+    }
+
+    .primary {
+      background: var(--blue);
+      color: #102138
+    }
+
+    .secondary {
+      background: #2b425f;
+      color: var(--text)
+    }
+
+    .danger {
+      background: #5c3344;
+      color: #fff
+    }
+
+    .notice {
+      border-left: 4px solid var(--blue);
+      background: #1c314c;
+      padding: 13px 15px;
+      border-radius: 10px;
+      margin-top: 14px
+    }
+
+    .notice.bad {
+      border-color: var(--red);
+      background: #452a3a
+    }
+
+    .notice.warn {
+      border-color: var(--yellow);
+      background: #443b32
+    }
+
+    .mini {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .row:last-child {
+      border: 0
+    }
+
+    .row strong {
+      font-size: 16px
+    }
+
+    .section-title {
+      margin: 0 0 15px;
+      font-size: 24px;
+      letter-spacing: -.03em
+    }
+
+    .formgrid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    input,
+    select {
+      width: 100%;
+      background: #101e33;
+      color: var(--text);
+      border: 1px solid #415570;
+      border-radius: 11px;
+      padding: 11px;
+      margin-top: 6px;
+      outline: none
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--blue)
+    }
+
+    .days {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px
+    }
+
+    .days label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #21344e;
+      padding: 8px 10px;
+      border-radius: 10px;
+      color: var(--text)
+    }
+
+    .days input {
+      width: auto;
+      margin: 0
+    }
+
+    .schedule {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .schedule:last-child {
+      border: 0
+    }
+
+    .schedule strong {
+      font-size: 18px
+    }
+
+    .schedule small {
+      display: block;
+      color: var(--muted)
+    }
+
+    .schedule .actions {
+      margin: 0
+    }
+
+    .feed {
+      display: grid;
+      gap: 10px
+    }
+
+    .feed-item {
+      background: #1d2d46;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 13px
+    }
+
+    .feed-item strong {
+      display: block
+    }
+
+    .feed-item small {
+      color: var(--muted)
+    }
+
+    .feed-item.bad {
+      border-color: #835466
+    }
+
+    .feed-item.warn {
+      border-color: #81704a
+    }
+
+    .empty {
+      padding: 30px;
+      color: var(--muted);
+      text-align: center
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 12px
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #f2f8ff;
+      color: #142238;
+      padding: 12px 18px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px #0008;
+      max-width: 90%;
+      z-index: 10;
+      display: none
+    }
+
+    .toast.show {
+      display: block
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #b4c9e1;
+      font-size: 12px;
+      max-height: 180px;
+      overflow: auto
+    }
+
+    .footer {
+      color: var(--muted);
+      text-align: center;
+      margin-top: 30px;
+      font-size: 12px
+    }
+
+
+    #historyMapFallback {
+      min-height: 420px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(#e4ebf5 1px, transparent 1px),
+        linear-gradient(90deg, #e4ebf5 1px, transparent 1px),
+        #f8fbff;
+      background-size: 32px 32px;
+      display: none;
+    }
+
+    #historyMapFallback svg {
+      display: block;
+      width: 100%;
+      height: 420px;
+    }
+
+    .history-map-fallback-note {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .94);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media(max-width:760px) {
+      .app {
+        padding: 18px 13px 90px
+      }
+
+      .span4,
+      .span6,
+      .span8 {
+        grid-column: span 12
+      }
+
+      .card {
+        padding: 17px
+      }
+
+      .phases {
+        gap: 7px
+      }
+
+      .phase {
+        padding: 10px
+      }
+
+      .phase strong {
+        font-size: 21px
+      }
+
+      .formgrid {
+        grid-template-columns: 1fr
+      }
+
+      header {
+        align-items: flex-start
+      }
+
+      .schedule {
+        align-items: flex-start;
+        flex-direction: column
+      }
+
+      .nav {
+        width: 100%
+      }
+
+      .nav button {
+        flex: 1;
+        padding: 10px
+      }
+    }
+  </style>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f9ff;
+      --card: #fff;
+      --line: #e5edf8;
+      --text: #182a48;
+      --muted: #71839f;
+      --blue: #286af5;
+      --green: #149f79;
+      --red: #df5267;
+      --yellow: #b9770a
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      color: var(--text);
+      background: radial-gradient(circle at 87% -10%, #d7e9ff 0, transparent 34%), radial-gradient(circle at -10% 35%, #e8f4ff 0, transparent 25%), #f5f9ff;
+      font-family: Inter, system-ui, "Segoe UI", sans-serif
+    }
+
+    .app {
+      max-width: 1200px;
+      padding: 20px 22px 125px
+    }
+
+    .topbar {
+      background: #fffffff0;
+      border: 1px solid #e6edf8;
+      box-shadow: 0 8px 28px #1c4f8a0d;
+      border-radius: 22px;
+      padding: 14px 19px;
+      margin-bottom: 25px;
+      position: relative;
+      z-index: 3
+    }
+
+    .brand small {
+      color: #347bea;
+      letter-spacing: .16em
+    }
+
+    .brand h1 {
+      font-size: clamp(20px, 3vw, 28px);
+      color: #132c52;
+      letter-spacing: -.045em
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(140deg, #1f70fa, #49cbd0);
+      color: white;
+      font-size: 24px;
+      box-shadow: 0 9px 18px #2777f633
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px
+    }
+
+    .top-actions .icon-button {
+      height: 39px;
+      width: 39px;
+      border: 1px solid #dce7f6;
+      border-radius: 12px;
+      background: white;
+      color: #557293
+    }
+
+    .top-actions .icon-button:hover {
+      color: #236df1;
+      border-color: #a9c8fa
+    }
+
+    .badge {
+      background: #eef4fc;
+      color: #58708e;
+      border: 1px solid #dfe9f7;
+      border-radius: 999px;
+      padding: 8px 11px;
+      font-size: 11px;
+      font-weight: 800
+    }
+
+    .badge.ok {
+      background: #e4f8f0;
+      color: #108865;
+      border-color: #bce9d7
+    }
+
+    .badge.bad {
+      background: #fff0f2;
+      color: #c84059;
+      border-color: #f6c7d0
+    }
+
+    .badge.warn {
+      background: #fff7df;
+      color: #9c6b0c;
+      border-color: #f1dc9d
+    }
+
+    .page {
+      display: none;
+      animation: pageIn .3s ease both
+    }
+
+    .page.active {
+      display: block
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .section-kicker {
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      color: #3c81e8;
+      font-size: 11px;
+      font-weight: 900
+    }
+
+    .section-title {
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 850;
+      color: #132a4a;
+      margin: 2px 0 3px
+    }
+
+    .section-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px
+    }
+
+    .back-btn {
+      border: 1px solid #dfebf7;
+      background: white;
+      color: #2d6bd5;
+      border-radius: 12px;
+      padding: 9px 13px;
+      font-weight: 800
+    }
+
+    .grid {
+      gap: 16px
+    }
+
+    .card {
+      color: #243954;
+      background: white;
+      border: 1px solid #e5edf7;
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 14px 35px #4775ae10
+    }
+
+    .card h2 {
+      color: #1c3152;
+      font-size: 18px;
+      font-weight: 800
+    }
+
+    .card p {
+      color: #7b8da5
+    }
+
+    .hero {
+      background: linear-gradient(125deg, #1b6ae7, #399ae5 60%, #5dc7d9);
+      border: none;
+      color: white;
+      overflow: hidden;
+      position: relative
+    }
+
+    .hero:after {
+      content: "";
+      position: absolute;
+      right: -55px;
+      top: -75px;
+      width: 260px;
+      height: 260px;
+      border: 50px solid #ffffff19;
+      border-radius: 50%;
+      pointer-events: none
+    }
+
+    .hero h2,
+    .hero p,
+    .hero .mini {
+      color: white
+    }
+
+    .hero .badge {
+      background: #ffffff25;
+      color: white;
+      border-color: #ffffff60
+    }
+
+    .hero .section-kicker {
+      color: #d8f1ff
+    }
+
+    .hero .statusline {
+      color: #eaf5ff
+    }
+
+    .hero .statusline b {
+      color: white
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1
+    }
+
+    .hero-icon {
+      font-size: 53px;
+      color: #ffffffdf
+    }
+
+    .mini {
+      color: #7991aa
+    }
+
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: transform .22s, box-shadow .22s, border-color .22s
+    }
+
+    .feature:hover,
+    .sensor-tile:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 38px #3d73aa20;
+      border-color: #bad5fb
+    }
+
+    .feature i,
+    .sensor-tile i,
+    .icon-disc {
+      width: 51px;
+      height: 51px;
+      flex: 0 0 51px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      background: #eaf3ff;
+      color: #2675e6
+    }
+
+    .feature h2 {
+      margin: 0 0 2px;
+      font-size: 16px
+    }
+
+    .feature p {
+      font-size: 12px
+    }
+
+    .feature .chev {
+      margin-left: auto;
+      color: #aac0d9
+    }
+
+    .tone-cyan i {
+      background: #e1f8f7;
+      color: #06a6a2
+    }
+
+    .tone-amber i {
+      background: #fff5df;
+      color: #c48a1b
+    }
+
+    .tone-rose i {
+      background: #fff0f2;
+      color: #dc6475
+    }
+
+    .tone-violet i {
+      background: #f0edff;
+      color: #7d67dc
+    }
+
+    .metric {
+      color: #183254;
+      font-size: clamp(31px, 5vw, 45px);
+      margin: 12px 0 2px
+    }
+
+    .metric-unit {
+      color: #8192a8;
+      font-size: 15px;
+      font-weight: 700
+    }
+
+    .reading-large {
+      font-size: clamp(48px, 10vw, 76px);
+      font-weight: 850;
+      letter-spacing: -.07em;
+      line-height: 1.05;
+      color: #183b64;
+      margin: 15px 0 6px
+    }
+
+    .reading-large small {
+      font-size: 22px;
+      color: #8094aa;
+      letter-spacing: 0
+    }
+
+    .reading-caption {
+      color: #7f91a8
+    }
+
+    .detail-icon {
+      font-size: 43px;
+      color: #2581e9;
+      background: #e9f4ff;
+      border-radius: 23px;
+      width: 78px;
+      height: 78px;
+      display: grid;
+      place-items: center
+    }
+
+    .detail-icon.rose {
+      background: #fff0f2;
+      color: #dc6375
+    }
+
+    .detail-icon.cyan {
+      background: #dff8f5;
+      color: #0eac9c
+    }
+
+    .detail-icon.amber {
+      background: #fff3d8;
+      color: #bf8213
+    }
+
+    .reading-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px
+    }
+
+    .reading-box {
+      border: 1px solid #e3edf8;
+      border-radius: 17px;
+      padding: 17px;
+      background: #fbfdff
+    }
+
+    .reading-box small {
+      color: #7c91aa;
+      font-weight: 700
+    }
+
+    .reading-box strong {
+      display: block;
+      color: #1f4573;
+      font-size: clamp(24px, 4vw, 34px);
+      margin: 6px 0
+    }
+
+    .reading-box .badge {
+      display: inline-block
+    }
+
+    .progress-soft {
+      height: 8px;
+      background: #eaf2fd;
+      border-radius: 20px;
+      overflow: hidden
+    }
+
+    .progress-soft span {
+      height: 100%;
+      display: block;
+      background: linear-gradient(90deg, #2f7ef3, #45c1d5);
+      transition: width .6s
+    }
+
+    .primary,
+    .secondary,
+    .danger {
+      border-radius: 13px;
+      padding: 11px 17px
+    }
+
+    .primary {
+      background: linear-gradient(120deg, #2778f4, #2a99ee);
+      color: white;
+      box-shadow: 0 7px 17px #1d72e42c
+    }
+
+    .primary:hover {
+      filter: brightness(.98);
+      color: white
+    }
+
+    .secondary {
+      background: #eef4fc;
+      color: #2869cb
+    }
+
+    .secondary:hover {
+      background: #e3efff
+    }
+
+    .danger {
+      background: #ffedf0;
+      color: #c9445a
+    }
+
+    .danger:hover {
+      background: #ffe0e6
+    }
+
+    .notice {
+      background: #eef6ff;
+      color: #396089;
+      border-color: #4a95f1
+    }
+
+    .notice.bad {
+      background: #fff0f2;
+      color: #b7475e;
+      border-color: #e8687b
+    }
+
+    .notice.warn {
+      background: #fff7e3;
+      color: #986b13;
+      border-color: #dbad40
+    }
+
+    .row {
+      border-color: #edf1f7
+    }
+
+    .row strong {
+      color: #1d385a
+    }
+
+    .hint {
+      color: #8090a4
+    }
+
+    .formgrid label,
+    label {
+      color: #58708d
+    }
+
+    .formgrid input,
+    .formgrid select,
+    input,
+    select {
+      background: white;
+      color: #17345b;
+      border-color: #d9e5f3;
+      border-radius: 12px
+    }
+
+    .formgrid input:focus,
+    .formgrid select:focus,
+    input:focus,
+    select:focus {
+      border-color: #3984f4;
+      box-shadow: 0 0 0 3px #3991ef1c
+    }
+
+    .days label {
+      background: #eff5fe;
+      color: #355a85
+    }
+
+    .schedule {
+      border-color: #e7eef8
+    }
+
+    .schedule strong {
+      color: #213e65
+    }
+
+    .feed-item {
+      background: #fafdff;
+      border-color: #e4edf8
+    }
+
+    .feed-item.bad {
+      background: #fff8f9;
+      border-color: #f6cbd2
+    }
+
+    .feed-item.warn {
+      background: #fffaf0;
+      border-color: #f1dfac
+    }
+
+    .feed-item small {
+      color: #899bb0
+    }
+
+    pre {
+      color: #4b6581;
+      background: #f3f7fd;
+      padding: 12px;
+      border-radius: 12px
+    }
+
+    .footer {
+      color: #879bb4
+    }
+
+    .nav {
+      position: fixed;
+      bottom: max(12px, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+      display: flex;
+      width: min(640px, calc(100% - 24px));
+      max-width: none;
+      margin: 0;
+      padding: 7px;
+      background: #fffffff5;
+      border: 1px solid #e4ecf7;
+      box-shadow: 0 14px 45px #16467c30;
+      border-radius: 23px;
+      overflow: visible;
+      backdrop-filter: blur(18px)
+    }
+
+    .nav button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      flex: 1;
+      min-width: 0;
+      padding: 7px 4px;
+      border-radius: 16px;
+      color: #8295ae;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.2
+    }
+
+    .nav button i {
+      font-size: 21px;
+      line-height: 1.1
+    }
+
+    .nav button.active {
+      background: linear-gradient(140deg, #2c79f0, #3aa6ef);
+      color: white;
+      box-shadow: 0 6px 14px #1c80e833
+    }
+
+    .nav button:hover:not(.active) {
+      color: #2c79e7;
+      background: #eef5ff
+    }
+
+    .nav-count {
+      position: absolute;
+      top: -4px;
+      right: 5px;
+      background: #e45a72;
+      color: white;
+      border-radius: 10px;
+      min-width: 16px;
+      font-size: 9px;
+      padding: 1px 3px
+    }
+
+    .sensor-tile {
+      height: 100%;
+      cursor: pointer;
+      transition: transform .22s, box-shadow .22s, border-color .22s
+    }
+
+    .sensor-tile h2 {
+      margin-top: 18px
+    }
+
+    .sensor-tile .metric {
+      font-size: 29px
+    }
+
+    .sensor-tile p {
+      font-size: 13px
+    }
+
+    .control-grid .card {
+      height: 100%
+    }
+
+    .statusline {
+      color: #8294a9
+    }
+
+    .toast {
+      bottom: 96px;
+      background: #1b395c;
+      color: white;
+      border-radius: 14px;
+      padding: 13px 18px;
+      z-index: 110;
+      border: 0;
+      box-shadow: 0 12px 33px #16457435
+    }
+
+    .confirm-card {
+      border: 0;
+      border-radius: 22px;
+      width: min(430px, calc(100% - 30px));
+      padding: 0;
+      box-shadow: 0 24px 80px #1738604a;
+      color: #1d3658
+    }
+
+    .confirm-card::backdrop {
+      background: #0d294c80;
+      backdrop-filter: blur(4px)
+    }
+
+    .confirm-content {
+      padding: 25px
+    }
+
+    .confirm-icon {
+      height: 55px;
+      width: 55px;
+      border-radius: 17px;
+      background: #eaf3ff;
+      color: #2b78ee;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      margin-bottom: 17px
+    }
+
+    .confirm-title {
+      font-size: 21px;
+      font-weight: 850
+    }
+
+    .confirm-message {
+      color: #7488a0;
+      margin: 7px 0 21px
+    }
+
+    .confirm-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end
+    }
+
+    .confirm-actions button {
+      min-width: 110px
+    }
+
+    .fade-in {
+      animation: pageIn .45s ease both
+    }
+
+    .pulse {
+      animation: pulse 2.7s ease-in-out infinite
+    }
+
+    @keyframes pulse {
+      50% {
+        box-shadow: 0 0 0 7px #2ec6a128
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+
+      *,
+      *:before,
+      *:after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important
+      }
+    }
+
+    .row.g-3 {
+      gap: 0;
+      padding: 0;
+      border: 0;
+      align-items: stretch;
+      justify-content: flex-start
+    }
+
+    .nav-count:empty {
+      display: none
+    }
+
+    @media(max-width:760px) {
+      .app {
+        padding: 12px 13px 111px
+      }
+
+      .topbar {
+        border-radius: 17px;
+        padding: 12px
+      }
+
+      .brand-icon {
+        width: 39px;
+        height: 39px;
+        font-size: 20px
+      }
+
+      .brand h1 {
+        font-size: 18px
+      }
+
+      .brand small {
+        font-size: 9px
+      }
+
+      .top-actions .icon-button {
+        width: 34px;
+        height: 34px
+      }
+
+      .top-actions .badge {
+        font-size: 0;
+        padding: 8px
+      }
+
+      .top-actions .badge:before {
+        content: "●";
+        font-size: 12px
+      }
+
+      .card {
+        padding: 17px
+      }
+
+      .reading-grid {
+        grid-template-columns: 1fr
+      }
+
+      .sensor-tile .metric {
+        font-size: 27px
+      }
+
+      .span4,
+      .span6,
+      .span8 {
+        grid-column: span 12
+      }
+
+      .nav {
+        width: calc(100% - 16px);
+        bottom: max(7px, env(safe-area-inset-bottom));
+        padding: 5px
+      }
+
+      .nav button {
+        font-size: 10px
+      }
+
+      .nav button i {
+        font-size: 20px
+      }
+
+      .schedule {
+        align-items: flex-start
+      }
+
+      .footer {
+        margin-top: 20px
+      }
+    }
+  </style>
+
+  <style>
+    /* =========================================================
+       DMK APP UNIFICADO - TOPO/MENU FIXOS + HISTORICO
+       ========================================================= */
+    body {
+      padding-top: 84px;
+    }
+
+    .app {
+      padding-top: 14px !important;
+    }
+
+    .topbar {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      max-width: none !important;
+      margin: 0 !important;
+      border-radius: 0 0 18px 18px !important;
+      z-index: 1000 !important;
+      padding-left: max(14px, env(safe-area-inset-left)) !important;
+      padding-right: max(14px, env(safe-area-inset-right)) !important;
+    }
+
+    .history-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .history-stat {
+      background: #fff;
+      border: 1px solid #e3ebf6;
+      border-radius: 17px;
+      padding: 15px;
+      box-shadow: 0 9px 26px #1c4f8a0c;
+    }
+
+    .history-stat small {
+      display: block;
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: .05em;
+    }
+
+    .history-stat strong {
+      display: block;
+      color: #19375f;
+      font-size: 27px;
+      margin-top: 5px;
+    }
+
+    #historyMap {
+      height: 430px;
+      width: 100%;
+      border-radius: 15px;
+      background: #edf3fa;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .history-table-wrap {
+      overflow: auto;
+      margin-top: 12px;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    .history-table th,
+    .history-table td {
+      padding: 10px 9px;
+      border-bottom: 1px solid #e8eef6;
+      text-align: left;
+      font-size: 12px;
+      vertical-align: top;
+    }
+
+    .history-table th {
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: .04em;
+      background: #f8fbff;
+    }
+
+    .state-chip {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .state-chip.on {
+      background: #e6f8f0;
+      color: #0b8058;
+    }
+
+    .state-chip.off {
+      background: #fff0f2;
+      color: #b53043;
+    }
+
+    .state-chip.blocked {
+      background: #fff6e8;
+      color: #a46600;
+    }
+
+    .clock-panel {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 13px;
+      margin-bottom: 15px;
+    }
+
+    .clock-value {
+      font-size: clamp(30px, 6vw, 45px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      color: #163d6f;
+      margin-top: 10px;
+    }
+
+    .clock-sub {
+      color: var(--muted);
+      margin-top: 7px;
+      font-size: 13px;
+    }
+
+    .history-toolbar {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto auto;
+      gap: 9px;
+      align-items: end;
+      margin-top: 14px;
+    }
+
+    @media(max-width: 760px) {
+      body {
+        padding-top: 76px;
+      }
+
+      .topbar {
+        border-radius: 0 0 15px 15px !important;
+      }
+
+      .history-stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .clock-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .history-toolbar {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .history-toolbar .history-search {
+        grid-column: 1 / -1;
+      }
+
+      #historyMap {
+        height: 360px;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar d-flex align-items-center justify-content-between gap-2">
+      <div class="d-flex align-items-center gap-2 gap-md-3"><span class="brand-icon"><i class="bi bi-cpu-fill"
+            aria-hidden="true"></i></span>
+        <div class="brand"><small>DMK IOT SOLUÇÕES SMART</small>
+          <h1>Controle inteligente</h1>
+        </div>
+      </div>
+      <div class="top-actions"><span id="connection" class="badge bad">Conectando…</span><button class="icon-button"
+          data-go="settings" aria-label="Configurações" title="Configurações"><i class="bi bi-gear-fill"></i></button>
+      </div>
+    </header>
+    <main>
+      <section id="home" class="page active">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">PAINEL PRINCIPAL</div>
+            <h2 class="section-title">Olá, bem-vindo 👋</h2>
+            <p class="section-desc">Seu sistema elétrico e hidráulico em um só lugar.</p>
+          </div><span class="badge">App v1.0.0</span>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-lg-8">
+            <article class="card hero h-100">
+              <div class="hero-inner">
+                <div class="between"><span class="section-kicker">STATUS EM TEMPO REAL</span><i
+                    class="bi bi-lightning-charge-fill hero-icon" aria-hidden="true"></i></div>
+                <h2 id="heroTitle" class="fs-2 mt-2 mb-2">Seu sistema em tempo real</h2>
+                <p id="heroSub">Os valores aparecem automaticamente após a conexão.</p>
+                <div class="d-flex flex-wrap gap-2 mt-4"><span id="energyBadge" class="badge">Aguardando
+                    dados</span><span class="badge">Atualizado <b id="lastData">--</b></span></div>
+              </div>
+            </article>
+          </div>
+          <div class="col-12 col-lg-4">
+            <article class="card h-100">
+              <div class="d-flex align-items-center gap-3"><span class="icon-disc"><i
+                    class="bi bi-bell-fill"></i></span>
+                <div>
+                  <h2 class="mb-1">Último aviso</h2>
+                  <p>Alertas importantes do sistema</p>
+                </div>
+              </div>
+              <div id="latestAlert" class="notice mt-3">Nenhum aviso registrado.</div><button class="secondary mt-3"
+                data-go="alerts">Abrir avisos <i class="bi bi-arrow-right"></i></button>
+            </article>
+          </div>
+          <div class="col-12 col-md-4">
+            <article class="card feature" data-go="voltage" role="button" tabindex="0"><i
+                class="bi bi-lightning-charge-fill"></i>
+              <div>
+                <h2>Tensão</h2>
+                <p>Fases R, S e T</p>
+              </div><i class="bi bi-chevron-right chev"></i>
+            </article>
+          </div>
+          <div class="col-12 col-md-4">
+            <article class="card feature tone-rose" data-go="sensor-temp" role="button" tabindex="0"><i
+                class="bi bi-thermometer-half"></i>
+              <div>
+                <h2>Temperatura</h2>
+                <p id="homeTemp">-- °C</p>
+              </div><i class="bi bi-chevron-right chev"></i>
+            </article>
+          </div>
+          <div class="col-12 col-md-4">
+            <article class="card feature tone-cyan" data-go="sensor-current" role="button" tabindex="0"><i
+                class="bi bi-speedometer2"></i>
+              <div>
+                <h2>Corrente</h2>
+                <p id="homeCurrent">-- A</p>
+              </div><i class="bi bi-chevron-right chev"></i>
+            </article>
+          </div>
+          <div class="col-12 col-md-6">
+            <article class="card feature tone-violet" data-go="controls" role="button" tabindex="0"><i
+                class="bi bi-toggles2"></i>
+              <div>
+                <h2>Bomba e luz</h2>
+                <p id="homeDevices">Controle de dispositivos</p>
+              </div><i class="bi bi-chevron-right chev"></i>
+            </article>
+          </div>
+          <div class="col-12 col-md-6">
+            <article class="card feature tone-amber" data-go="schedule" role="button" tabindex="0"><i
+                class="bi bi-calendar2-week-fill"></i>
+              <div>
+                <h2>Programações</h2>
+                <p>Ligar e desligar automaticamente</p>
+              </div><i class="bi bi-chevron-right chev"></i>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="sensors" class="page">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">MONITORAMENTO</div>
+            <h2 class="section-title">Medições e sensores</h2>
+            <p class="section-desc">Cada componente tem uma tela dedicada.</p>
+          </div>
+        </div>
+        <div class="row g-3">
+          <div class="col-6 col-lg-4">
+            <article class="card sensor-tile" data-go="voltage" role="button" tabindex="0"><i
+                class="bi bi-lightning-charge-fill"></i>
+              <h2>Tensão</h2>
+              <p>Três fases e limites</p>
+              <div class="metric">R • S • T</div>
+            </article>
+          </div>
+          <div class="col-6 col-lg-4">
+            <article class="card sensor-tile tone-rose" data-go="sensor-temp" role="button" tabindex="0"><i
+                class="bi bi-thermometer-half"></i>
+              <h2>Temperatura</h2>
+              <p>Sensor térmico</p>
+              <div class="metric" id="tileTemp">-- °C</div>
+            </article>
+          </div>
+          <div class="col-6 col-lg-4">
+            <article class="card sensor-tile tone-cyan" data-go="sensor-current" role="button" tabindex="0"><i
+                class="bi bi-speedometer2"></i>
+              <h2>Corrente</h2>
+              <p>Consumo instantâneo</p>
+              <div class="metric" id="tileCurrent">-- A</div>
+            </article>
+          </div>
+          <div class="col-6 col-lg-4">
+            <article class="card sensor-tile tone-violet" data-go="sensor-water" role="button" tabindex="0"><i
+                class="bi bi-droplet-fill"></i>
+              <h2>Água</h2>
+              <p>Fluxo e total</p>
+              <div class="metric" id="tileFlow">-- L/min</div>
+            </article>
+          </div>
+          <div class="col-6 col-lg-4">
+            <article class="card sensor-tile tone-amber" data-go="sensor-rain" role="button" tabindex="0"><i
+                class="bi bi-cloud-rain-fill"></i>
+              <h2>Chuva</h2>
+              <p>Umidade do sensor</p>
+              <div class="metric" id="tileRain">-- %</div>
+            </article>
+          </div>
+          <div class="col-6 col-lg-4">
+            <article class="card sensor-tile tone-rose" data-go="sensor-alarm" role="button" tabindex="0"><i
+                class="bi bi-shield-exclamation"></i>
+              <h2>Alarme</h2>
+              <p>Segurança</p>
+              <div class="metric" id="tileAlarm">--</div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="voltage" class="page">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">SENSOR DE ENERGIA</div>
+            <h2 class="section-title">Tensão das três fases</h2>
+            <p class="section-desc">Leitura fase-neutro em tempo real.</p>
+          </div><button class="back-btn" data-go="sensors"><i class="bi bi-arrow-left"></i> Sensores</button>
+        </div>
+        <article class="card">
+          <div class="d-flex align-items-center gap-3 mb-4"><span class="detail-icon"><i
+                class="bi bi-lightning-charge-fill"></i></span>
+            <div>
+              <h2 class="mb-1">Rede elétrica</h2>
+              <p>Faixa configurada: <strong id="voltageRange">--</strong></p>
+            </div>
+          </div>
+          <div class="reading-grid">
+            <div class="reading-box"><small>FASE R</small><strong id="vR">--.- V</strong><span id="sR"
+                class="badge">Aguardando</span></div>
+            <div class="reading-box"><small>FASE S</small><strong id="vS">--.- V</strong><span id="sS"
+                class="badge">Aguardando</span></div>
+            <div class="reading-box"><small>FASE T</small><strong id="vT">--.- V</strong><span id="sT"
+                class="badge">Aguardando</span></div>
+          </div>
+          <div class="notice warn mt-4">As leituras devem ser calibradas antes de ativar a proteção automática da bomba.
+          </div>
+        </article>
+      </section>
+      <section id="sensor-temp" class="page">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">SENSOR TÉRMICO</div>
+            <h2 class="section-title">Temperatura</h2>
+            <p class="section-desc">Acompanhamento contínuo do ambiente monitorado.</p>
+          </div><button class="back-btn" data-go="sensors"><i class="bi bi-arrow-left"></i> Sensores</button>
+        </div>
+        <article class="card"><span class="detail-icon rose"><i class="bi bi-thermometer-half"></i></span>
+          <div class="reading-large"><span id="temperature">-- °C</span></div>
+          <p class="reading-caption">Valor recebido do ESP32 principal</p>
+        </article>
+      </section>
+      <section id="sensor-current" class="page">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">SENSOR ELÉTRICO</div>
+            <h2 class="section-title">Corrente</h2>
+            <p class="section-desc">Leitura instantânea de corrente.</p>
+          </div><button class="back-btn" data-go="sensors"><i class="bi bi-arrow-left"></i> Sensores</button>
+        </div>
+        <article class="card"><span class="detail-icon cyan"><i class="bi bi-speedometer2"></i></span>
+          <div class="reading-large"><span id="current">-- A</span></div>
+          <p class="reading-caption">Confirme a calibração do sensor para obter amperes confiáveis.</p>
+        </article>
+      </section>
+      <section id="sensor-water" class="page">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">SENSOR HIDRÁULICO</div>
+            <h2 class="section-title">Fluxo de água</h2>
+            <p class="section-desc">Vazão e volume acumulado.</p>
+          </div><button class="back-btn" data-go="sensors"><i class="bi bi-arrow-left"></i> Sensores</button>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <article class="card h-100"><span class="detail-icon cyan"><i class="bi bi-droplet-half"></i></span>
+              <h2 class="mt-4">Vazão atual</h2>
+              <div class="reading-large" id="flow">-- L/min</div>
+            </article>
+          </div>
+          <div class="col-md-6">
+            <article class="card h-100"><span class="detail-icon"><i class="bi bi-water"></i></span>
+              <h2 class="mt-4">Volume acumulado</h2>
+              <div class="reading-large" id="water">-- L</div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="sensor-rain" class="page">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">SENSOR AMBIENTAL</div>
+            <h2 class="section-title">Chuva</h2>
+            <p class="section-desc">Percentual medido pelo sensor.</p>
+          </div><button class="back-btn" data-go="sensors"><i class="bi bi-arrow-left"></i> Sensores</button>
+        </div>
+        <article class="card"><span class="detail-icon amber"><i class="bi bi-cloud-rain-fill"></i></span>
+          <div class="reading-large" id="rain">-- %</div>
+          <p class="reading-caption">O percentual depende da calibração seco/molhado.</p>
+        </article>
+      </section>
+      <section id="sensor-alarm" class="page">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">SEGURANÇA</div>
+            <h2 class="section-title">Alarme</h2>
+            <p class="section-desc">Estado do contato de alarme do ESP32.</p>
+          </div><button class="back-btn" data-go="sensors"><i class="bi bi-arrow-left"></i> Sensores</button>
+        </div>
+        <article class="card"><span class="detail-icon rose"><i class="bi bi-shield-exclamation"></i></span>
+          <div class="reading-large" id="alarm">--</div>
+          <p class="reading-caption">Quando ativo, o app registra um aviso na central de notificações.</p>
+        </article>
+      </section>
+      <section id="controls" class="page">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">AUTOMAÇÃO</div>
+            <h2 class="section-title">Controle de dispositivos</h2>
+            <p class="section-desc">Comandos com confirmação antes do envio.</p>
+          </div>
+        </div>
+        <div class="row g-3 control-grid">
+          <div class="col-md-6">
+            <article class="card">
+              <div class="between"><span class="detail-icon"><i class="bi bi-fan"></i></span><span id="pumpStatus"
+                  class="badge">--</span></div>
+              <h2 class="mt-4">Bomba</h2>
+              <div class="metric" id="pumpText">Desconhecido</div>
+              <p>Contatora da bomba de água</p>
+              <div class="actions"><button id="pumpButton" class="primary" disabled>Controlar bomba</button></div>
+              <div id="protection" class="notice">Aguardando proteção.</div>
+            </article>
+          </div>
+          <div class="col-md-6">
+            <article class="card">
+              <div class="between"><span class="detail-icon amber"><i class="bi bi-lightbulb-fill"></i></span><span
+                  id="lightStatus" class="badge">--</span></div>
+              <h2 class="mt-4">Iluminação</h2>
+              <div class="metric" id="lightText">Desconhecido</div>
+              <p>Luz conectada ao módulo principal</p>
+              <div class="actions"><button id="lightButton" class="primary" disabled>Controlar luz</button></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="schedule" class="page">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">RELÓGIO DO ESP + ROTINAS</div>
+            <h2 class="section-title">Automações</h2>
+            <p class="section-desc">A hora e as programações ficam no próprio ESP32.</p>
+          </div>
+          <span id="clockBadge" class="badge warn">Relógio aguardando</span>
+        </div>
+
+        <div class="clock-panel">
+          <article class="card">
+            <div class="between">
+              <div>
+                <small class="mini">HORA DO ESP32</small>
+                <div id="clockNow" class="clock-value">--:--:--</div>
+                <div id="clockSource" class="clock-sub">Aguardando sincronização NTP</div>
+              </div>
+              <i class="bi bi-clock-history text-primary" style="font-size:34px"></i>
+            </div>
+          </article>
+
+          <article class="card">
+            <h2><i class="bi bi-shield-check text-primary me-2"></i>Relógio seguro</h2>
+            <p>Com internet o ESP ajusta pelo NTP. Depois continua contando sem internet enquanto permanecer ligado.</p>
+            <button id="syncClockButton" class="secondary mt-3">
+              <i class="bi bi-phone me-1"></i>Usar hora deste aparelho
+            </button>
+            <div class="hint">O ajuste manual funciona quando esta página consegue acessar diretamente o ESP.</div>
+          </article>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-lg-7">
+            <article class="card h-100">
+              <div class="between">
+                <div>
+                  <h2><i class="bi bi-calendar2-week text-primary me-2"></i>Horários salvos</h2>
+                  <p>Até 16 automações persistentes no ESP32.</p>
+                </div>
+                <button id="refreshSchedule" class="secondary">Atualizar</button>
+              </div>
+              <div id="scheduleList" class="empty">Aguardando programação do equipamento…</div>
+            </article>
+          </div>
+
+          <div class="col-lg-5">
+            <article class="card">
+              <h2 id="formTitle">Criar programação</h2>
+              <p>Bomba ou luz, com dias e horário definidos.</p>
+
+              <label class="mt-3">Nome
+                <input id="ruleName" placeholder="Ex.: Irrigação manhã">
+              </label>
+
+              <div class="formgrid mt-3">
+                <label>Horário
+                  <input id="ruleTime" type="time" value="07:00">
+                </label>
+
+                <label>Equipamento
+                  <select id="ruleDevice">
+                    <option value="0">Bomba</option>
+                    <option value="1">Luz</option>
+                  </select>
+                </label>
+
+                <label>Ação
+                  <select id="ruleAction">
+                    <option value="1">Ligar</option>
+                    <option value="0">Desligar</option>
+                  </select>
+                </label>
+              </div>
+
+              <label class="mt-3">Repetir nos dias</label>
+              <div class="days" id="days"></div>
+
+              <div class="actions">
+                <button id="saveRule" class="primary">Salvar no ESP32</button>
+                <button id="cancelRule" class="secondary">Limpar</button>
+              </div>
+              <div id="saveHint" class="hint">As automações são executadas pela hora do próprio ESP32.</div>
+            </article>
+          </div>
+
+          <div class="col-12">
+            <div class="notice warn">
+              A ligação programada da bomba respeita a proteção de tensão quando ativada no ESP32.
+              O software não substitui dispositivos de proteção elétrica.
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section id="history" class="page">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">HISTÓRICO REMOTO</div>
+            <h2 class="section-title">Mapa e registros da bomba</h2>
+            <p class="section-desc">Busca os eventos salvos no ESP através do MQTT.</p>
+          </div>
+          <span id="historyStatus" class="badge warn">Aguardando busca</span>
+        </div>
+
+        <div class="history-stats">
+          <div class="history-stat"><small>Registros</small><strong id="histTotal">0</strong></div>
+          <div class="history-stat"><small>Com GPS</small><strong id="histGps">0</strong></div>
+          <div class="history-stat"><small>Ligamentos</small><strong id="histOn">0</strong></div>
+          <div class="history-stat"><small>Desligamentos</small><strong id="histOff">0</strong></div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12">
+            <article class="card">
+              <div class="between">
+                <div>
+                  <h2><i class="bi bi-geo-alt-fill text-primary me-2"></i>Mapa</h2>
+                  <p id="historyMapInfo">Nenhum ponto carregado.</p>
+                </div>
+                <button id="historyRefresh" class="secondary">Buscar pelo MQTT</button>
+              </div>
+              <div id="historyMap"></div>
+              <div id="historyMapFallback">
+                <svg id="historyMapFallbackSvg" viewBox="0 0 1000 600" preserveAspectRatio="none"></svg>
+                <div class="history-map-fallback-note">
+                  Mapa de ruas indisponível. Os pontos GPS continuam visíveis nesta grade local.
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="col-12">
+            <article class="card">
+              <div class="between">
+                <div>
+                  <h2><i class="bi bi-clock-history text-primary me-2"></i>Eventos</h2>
+                  <p>Latitude/longitude 0,0 são mostradas como sem localização.</p>
+                </div>
+              </div>
+
+              <div class="history-toolbar">
+                <label class="history-search">Pesquisar
+                  <input id="histSearch" placeholder="Origem, status, motivo...">
+                </label>
+
+                <label>Estado
+                  <select id="histState">
+                    <option value="">Todos</option>
+                    <option value="ON">Ligada</option>
+                    <option value="OFF">Desligada</option>
+                  </select>
+                </label>
+
+                <label>GPS
+                  <select id="histGpsFilter">
+                    <option value="">Todos</option>
+                    <option value="yes">Com GPS</option>
+                    <option value="no">Sem GPS</option>
+                  </select>
+                </label>
+
+                <button id="historyCsv" class="secondary">CSV</button>
+                <button id="historyClear" class="danger">Apagar</button>
+              </div>
+
+              <div class="history-table-wrap">
+                <table class="history-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Data/Hora ESP</th>
+                      <th>Estado</th>
+                      <th>Origem</th>
+                      <th>Status</th>
+                      <th>Latitude</th>
+                      <th>Longitude</th>
+                      <th>Precisão</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historyRows"></tbody>
+                </table>
+              </div>
+              <div id="historyEmpty" class="empty">Nenhum registro recebido.</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="alerts" class="page">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">CENTRAL DE EVENTOS</div>
+            <h2 class="section-title">Notificações e alertas</h2>
+            <p class="section-desc">Tensão, alarme, conexão e programações.</p>
+          </div>
+        </div>
+        <div class="row g-3">
+          <div class="col-lg-8">
+            <article class="card">
+              <div id="alertFeed" class="feed"></div><button id="clearAlerts" class="secondary mt-3">Limpar histórico
+                local</button>
+            </article>
+          </div>
+          <div class="col-lg-4">
+            <article class="card"><span class="detail-icon"><i class="bi bi-bell-fill"></i></span>
+              <h2 class="mt-3">Avisos na tela</h2>
+              <p>Ative a permissão do navegador para receber notificações enquanto este app estiver aberto.</p><button
+                id="notifyButton" class="primary mt-3">Ativar notificações</button>
+              <div class="notice warn">Com o app fechado, os horários continuam no ESP32, mas as notificações do
+                navegador não são enviadas.</div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="settings" class="page">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">SISTEMA</div>
+            <h2 class="section-title">Conexão e informações</h2>
+            <p class="section-desc">Configure o mesmo broker e tópico do ESP32.</p>
+          </div>
+        </div>
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <article class="card">
+              <h2>Conexão MQTT</h2>
+              <div class="formgrid mt-3"><label style="grid-column:1/-1">WebSocket do broker<input id="broker"
+                    placeholder="ws://broker.hivemq.com:8000/mqtt"></label><label style="grid-column:1/-1">Tópico
+                  base<input id="topic" placeholder="dmk/energia/cacibanova/verdejante/pe"></label><label>Usuário
+                  MQTT<input id="user" autocomplete="username"></label><label>Senha MQTT<input id="pass" type="password"
+                    autocomplete="current-password"></label></div><button id="connectButton" class="primary mt-3">Salvar
+                e conectar</button>
+              <p class="hint">Em HTTPS use wss://. Broker público não é adequado para controle privado.</p>
+            </article>
+          </div>
+          <div class="col-lg-6">
+            <article class="card">
+              <h2>Estado do sistema</h2>
+              <div class="row"><span>Broker</span><strong id="mqttStatus">--</strong></div>
+              <div class="row"><span>ESP32 principal</span><strong id="espStatus">--</strong></div>
+              <div class="row"><span>Mensagens</span><strong id="packetCount">0</strong></div>
+              <div class="row"><span>Wi-Fi ESP32</span><strong id="rssi">-- dBm</strong></div>
+              <div class="row"><span>Firmware ESP32</span><strong id="firmware">--</strong></div>
+              <div class="row"><span>Aplicativo</span><strong>DMK Smart v1.0.0</strong></div>
+              <h2 class="mt-4">Diagnóstico</h2>
+              <pre id="diag"></pre>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+    <nav class="nav" role="tablist" aria-label="Navegação principal"><button class="active" data-page="home"
+        aria-label="Início"><i class="bi bi-house-fill"></i><span>Início</span></button><button data-page="sensors"
+        aria-label="Sensores"><i class="bi bi-grid-1x2-fill"></i><span>Sensores</span></button><button
+        data-page="controls" aria-label="Controle"><i class="bi bi-toggles2"></i><span>Controle</span></button><button
+        data-page="schedule" aria-label="Agenda"><i
+          class="bi bi-calendar2-week-fill"></i><span>Agenda</span></button><button data-page="history"
+        aria-label="Histórico"><i class="bi bi-geo-alt-fill"></i><span>Histórico</span></button><button
+        data-page="alerts" aria-label="Avisos"><i class="bi bi-bell-fill"></i><span>Avisos</span><span id="alertCount"
+          class="nav-count"></span></button></nav>
+    <div class="footer">DMK IoT Soluções Smart • App v1.0.0 • Compatível com firmware principal 7.2.0 • Horários de
+      Brasília</div>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="confirmDialog" class="confirm-card" aria-labelledby="confirmTitle">
+    <div class="confirm-content">
+      <div class="confirm-icon"><i class="bi bi-shield-check"></i></div>
+      <div id="confirmTitle" class="confirm-title">Confirmar ação</div>
+      <p id="confirmMessage" class="confirm-message"></p>
+      <div class="confirm-actions"><button id="confirmCancel" class="secondary">Cancelar</button><button
+          id="confirmAccept" class="primary">Confirmar</button></div>
+    </div>
+  </dialog>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';document.head.appendChild(s);"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script>
+    const $ = id => document.getElementById(id), enc = new TextEncoder(), dec = new TextDecoder();
+    const DEFAULTS = { broker: 'wss://broker.hivemq.com:8884/mqtt', topic: 'dmk/energia/cacibanova/verdejante/pe', user: '', pass: '' };
+    const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    let ws = null, mqttConnected = false, espOnline = false, telemetrySeen = false, pumpOn = false, lightOn = false, packetId = 0, packets = 0;
+    let reconnectTimer, pingTimer, lastTelemetry = 0, voltageKey = '', voltageHits = 0, voltageWasBad = false, alarmWas = false, clockOk = false;
+    let remoteClockBaseMs = 0, remoteClockReceivedAt = 0, remoteClockSourceText = '';
+    let rules = [], editingId = null, pendingRule = null, alerts = [], memory = {};
+    function getItem(k, f = '') { try { return localStorage.getItem(k) ?? f } catch { return memory[k] ?? f } }
+    function setItem(k, v) { try { localStorage.setItem(k, v) } catch { memory[k] = v } }
+    function cfg() { let broker = getItem('energyBrokerWs', DEFAULTS.broker).trim(); if (broker === 'ws://broker.hivemq.com:8000/mqtt') { broker = DEFAULTS.broker; setItem('energyBrokerWs', broker) } return { broker, topic: getItem('energyTopicBase', DEFAULTS.topic).trim().replace(/\/+$/, ''), user: getItem('energyMqttUser'), pass: getItem('energyMqttPass') } }
+    function log(s) { $('diag').textContent = (new Date().toLocaleTimeString() + ' ' + s + '\n' + $('diag').textContent).slice(0, 2500) }
+    function toast(s) { $('toast').textContent = s; $('toast').classList.add('show'); clearTimeout(toast.timer); toast.timer = setTimeout(() => $('toast').classList.remove('show'), 4000) }
+    function page(name) { document.querySelectorAll('.page').forEach(e => e.classList.toggle('active', e.id === name)); const parent = name.startsWith('sensor-') || name === 'voltage' ? 'sensors' : name; document.querySelectorAll('.nav button').forEach(e => { const active = e.dataset.page === parent; e.classList.toggle('active', active); e.setAttribute('aria-selected', String(active)) }); window.scrollTo({ top: 0, behavior: 'smooth' }); if (name === 'schedule') { requestScheduleState(); } if (name === 'history') { setTimeout(() => { historyInitMap(); historyRenderMap(); }, 80); historyRequest(false); } }
+    document.querySelectorAll('[data-page]').forEach(e => e.onclick = () => page(e.dataset.page)); document.querySelectorAll('[data-go]').forEach(e => e.onclick = () => page(e.dataset.go));
+    document.querySelectorAll('[data-go][role="button"]').forEach(e => e.onkeydown = ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); page(e.dataset.go) } });
+    function badge(id, text, kind = '') { $(id).textContent = text; $(id).className = 'badge ' + kind }
+    function notify(title, body) { if ('Notification' in window && Notification.permission === 'granted') { try { new Notification(title, { body, tag: 'energia-' + title }) } catch { } } }
+    function addAlert(kind, title, body, desktop = true) { const item = { kind, title, body, time: new Date().toLocaleString('pt-BR') }; alerts.unshift(item); alerts = alerts.slice(0, 80); setItem('energyAlertsV72', JSON.stringify(alerts)); renderAlerts(); if (desktop) notify(title, body) }
+    function renderAlerts() { $('alertCount').textContent = alerts.length ? '(' + alerts.length + ')' : ''; $('latestAlert').textContent = alerts.length ? `${alerts[0].title} — ${alerts[0].body}` : 'Nenhum aviso registrado.'; $('alertFeed').innerHTML = ''; if (!alerts.length) { $('alertFeed').innerHTML = '<div class="empty">Tudo tranquilo por aqui.</div>'; return } for (const a of alerts) { const e = document.createElement('div'); e.className = 'feed-item ' + a.kind; const t = document.createElement('strong'), b = document.createElement('div'), d = document.createElement('small'); t.textContent = a.title; b.textContent = a.body; d.textContent = a.time; e.append(t, b, d); $('alertFeed').append(e) } }
+    function uiConnection(text, kind = 'bad') { badge('connection', text, kind); $('mqttStatus').textContent = text; $('espStatus').textContent = espOnline ? 'Online' : 'Offline'; const ready = mqttConnected && espOnline && telemetrySeen && Date.now() - lastTelemetry < 12000; $('pumpButton').disabled = $('lightButton').disabled = !ready; $('saveRule').disabled = !ready || !clockOk; $('saveHint').textContent = !ready ? 'Aguardando comunicação com o ESP32.' : !clockOk ? 'Aguardando sincronização do relógio NTP.' : 'Horários são salvos no ESP32 principal.' }
+    function u16(n) { return [(n >> 8) & 255, n & 255] } function ms(s) { const b = enc.encode(s); return new Uint8Array([...u16(b.length), ...b]) } function rem(n) { const a = []; do { let b = n % 128; n = Math.floor(n / 128); if (n) b |= 128; a.push(b) } while (n); return a } function join(parts) { let n = 0; parts.forEach(p => n += p.length); const a = new Uint8Array(n); let i = 0; parts.forEach(p => { a.set(p, i); i += p.length }); return a } function frame(type, body) { return new Uint8Array([type, ...rem(body.length), ...body]) }
+    function sendConnect() { const c = cfg(); let f = 2; if (c.user) f |= 128; if (c.pass) f |= 64; const head = join([ms('MQTT'), new Uint8Array([4, f, 0, 30])]); const data = [ms('energia-app-' + Math.random().toString(16).slice(2, 10))]; if (c.user) data.push(ms(c.user)); if (c.pass) data.push(ms(c.pass)); ws.send(frame(16, join([head, ...data]))) }
+    function subscribe() { const c = cfg(), id = ++packetId; const suffix = ['telemetry', 'pump/state', 'light/state', 'availability', 'schedule/state', 'schedule/event', 'pump/history/response']; const body = [new Uint8Array(u16(id))]; suffix.forEach(s => body.push(ms(c.topic + '/' + s), new Uint8Array([0]))); ws.send(frame(0x82, join(body))) }
+    function publish(s, text) { if (!mqttConnected || !ws || ws.readyState !== 1) { toast('Broker desconectado.'); return false } ws.send(frame(0x30, join([ms(cfg().topic + '/' + s), enc.encode(String(text))]))); return true }
+    function remaining(b, p) { let m = 1, v = 0, u = 0, d; do { if (p + u >= b.length) return null; d = b[p + u++]; v += (d & 127) * m; m *= 128; if (u > 4) return null } while (d & 128); return { v, u } }
+    function received(buffer) { const b = new Uint8Array(buffer); let p = 0; while (p < b.length) { const h = b[p++], r = remaining(b, p); if (!r) return; p += r.u; const end = p + r.v; if (end > b.length) return; const body = b.slice(p, end); p = end; const type = h >> 4; if (type === 2) { if (body.length >= 2 && body[1] === 0) { mqttConnected = true; uiConnection('Broker conectado', 'ok'); subscribe(); setTimeout(requestScheduleState, 250); clearInterval(pingTimer); pingTimer = setInterval(() => { if (mqttConnected && ws.readyState === 1) ws.send(new Uint8Array([0xc0, 0])) }, 20000); log('MQTT conectado') } else { log('MQTT recusado: ' + (body[1] ?? '?')); ws.close() } } else if (type === 3) { if (body.length < 2) continue; let i = 2, n = (body[0] << 8) | body[1]; if (i + n > body.length) continue; const topic = dec.decode(body.slice(i, i + n)); i += n; if ((h >> 1) & 3) i += 2; route(topic, dec.decode(body.slice(i))); $('packetCount').textContent = ++packets } } }
+    function connect() {
+      clearTimeout(reconnectTimer); clearInterval(pingTimer);
+      if (ws) { ws.onclose = null; ws.onerror = null; ws.close() }
+      mqttConnected = false; espOnline = false; telemetrySeen = false; clockOk = false; remoteClockBaseMs = 0; remoteClockReceivedAt = 0;
+      const url = cfg().broker;
+      if (location.protocol === 'https:' && url.startsWith('ws://')) {
+        uiConnection('Use WSS', 'bad');
+        log('Página HTTPS não pode abrir ws://. Configure wss://broker.hivemq.com:8884/mqtt.');
+        return;
+      }
+      uiConnection('Conectando…'); log('Tentando ' + url);
+      let opened = false;
+      try {
+        ws = new WebSocket(url, ['mqtt']); ws.binaryType = 'arraybuffer';
+        ws.onopen = () => { opened = true; log('WebSocket aberto; enviando MQTT CONNECT.'); sendConnect() };
+        ws.onmessage = e => { if (e.data instanceof Blob) e.data.arrayBuffer().then(received); else received(e.data) };
+        ws.onerror = () => log('WebSocket falhou em ' + url + '. Confira internet, porta, certificado e endereço /mqtt. O navegador não informa a causa exata neste evento.');
+        ws.onclose = e => {
+          const was = espOnline; mqttConnected = false; espOnline = false;
+          uiConnection('Desconectado');
+          log('WebSocket fechado: código ' + e.code + ', aberto antes: ' + (opened ? 'sim' : 'não') + ', motivo: ' + (e.reason || 'não informado'));
+          if (was) addAlert('warn', 'Conexão perdida', 'O aplicativo perdeu contato com o broker.');
+          reconnectTimer = setTimeout(connect, 5000);
+        };
+      } catch (e) { log('Não foi possível criar WebSocket: ' + e.message); reconnectTimer = setTimeout(connect, 5000) }
+    }
+    function route(topic, text) {
+      const base = cfg().topic + '/';
+      if (!topic.startsWith(base)) return;
+
+      const s = topic.slice(base.length);
+
+      if (s === 'availability') {
+        const was = espOnline;
+        espOnline = text.trim() === 'online';
+        uiConnection(mqttConnected ? 'Broker conectado' : 'Desconectado', mqttConnected ? 'ok' : 'bad');
+        if (was && !espOnline) addAlert('warn', 'ESP32 offline', 'O equipamento principal perdeu a conexão.');
+        return;
+      }
+
+      if (s === 'pump/state') {
+        pumpOn = text.trim().toUpperCase() === 'ON';
+        renderControls();
+        return;
+      }
+
+      if (s === 'light/state') {
+        lightOn = text.trim().toUpperCase() === 'ON';
+        renderControls();
+        return;
+      }
+
+      try {
+        const d = JSON.parse(text);
+
+        if (s === 'telemetry') renderTelemetry(d);
+        else if (s === 'schedule/state') renderScheduleState(d);
+        else if (s === 'schedule/event') renderScheduleEvent(d);
+        else if (s === 'pump/history/response') historyHandleMessage(d);
+      } catch (e) {
+        log('Mensagem inválida: ' + s + ' ' + e.message);
+      }
+    }
+
+    function renderControls() { badge('pumpStatus', pumpOn ? 'Ligada' : 'Desligada', pumpOn ? 'ok' : ''); badge('lightStatus', lightOn ? 'Ligada' : 'Desligada', lightOn ? 'ok' : ''); $('pumpText').textContent = pumpOn ? 'Ligada' : 'Desligada'; $('lightText').textContent = lightOn ? 'Ligada' : 'Desligada'; $('pumpButton').textContent = pumpOn ? 'Desligar bomba' : 'Ligar bomba'; $('lightButton').textContent = lightOn ? 'Desligar luz' : 'Ligar luz'; uiConnection(mqttConnected ? 'Broker conectado' : 'Desconectado', mqttConnected ? 'ok' : 'bad') }
+    function fmt(n, d = 1) { return Number.isFinite(Number(n)) ? Number(n).toFixed(d) : '--' }
+    function updateRemoteClockFromPayload(d) {
+      if (!d) return;
+
+      const valid =
+        d.clock_valid !== undefined ? !!d.clock_valid :
+          d.clock_ok !== undefined ? !!d.clock_ok :
+            null;
+
+      const local = d.clock_local || d.clock || '';
+
+      if (valid === true && local) {
+        clockOk = true;
+        badge('clockBadge', 'Relógio válido · UTC-3', 'ok');
+        setRemoteClockBase(local, 'Hora do ESP32 · Brasília UTC-3');
+        uiConnection(mqttConnected ? 'Broker conectado' : 'Desconectado',
+          mqttConnected ? 'ok' : 'bad');
+      }
+    }
+
+    function renderTelemetry(d) { updateRemoteClockFromPayload(d); telemetrySeen = true; lastTelemetry = Date.now(); let bad = []; const lo = Number(d.vmin), hi = Number(d.vmax); for (const phase of ['R', 'S', 'T']) { const v = Number(d['v' + phase]); $('v' + phase).textContent = fmt(v) + ' V'; const status = !Number.isFinite(v) ? 'Aguardando' : v < lo ? 'Tensão baixa' : v > hi ? 'Tensão alta' : 'Normal'; $('s' + phase).textContent = status; if (status !== 'Normal') bad.push(phase + ': ' + fmt(v) + ' V (' + status + ')') } $('voltageRange').textContent = fmt(lo, 0) + '–' + fmt(hi, 0) + ' V'; $('lastData').textContent = new Date().toLocaleTimeString('pt-BR'); $('current').textContent = fmt(d.current_a, 2) + ' A'; $('temperature').textContent = fmt(d.temperature_c) + ' °C'; $('flow').textContent = fmt(d.flow_l_min, 2) + ' L/min'; $('water').textContent = fmt(d.total_l, 1) + ' L'; $('rain').textContent = fmt(d.rain_pct, 0) + ' %'; $('alarm').textContent = d.alarm ? 'ATIVO' : 'Normal'; $('rssi').textContent = (d.rssi ?? '--') + ' dBm'; $('firmware').textContent = 'v' + (d.firmware || '--'); pumpOn = !!d.pump; lightOn = !!d.light; renderControls(); const p = d.protection_enabled ? (d.protection_ok ? 'Proteção de tensão ativa e liberada.' : 'Proteção bloqueando a bomba: ' + String(d.protection_reason).replaceAll('_', ' ')) : 'Proteção automática de tensão desabilitada no ESP32.'; $('protection').textContent = p; $('protection').className = 'notice ' + (d.protection_enabled && !d.protection_ok ? 'bad' : ''); const key = bad.map(x => x.split(':')[0]).join('|'); if (key === voltageKey) voltageHits++; else { voltageKey = key; voltageHits = 1 } if (bad.length && voltageHits === 2 && !voltageWasBad) { addAlert('bad', 'Alerta de tensão', bad.join(' • ')); voltageWasBad = true } if (!bad.length && voltageHits === 2 && voltageWasBad) { addAlert('', 'Tensão normalizada', 'As três fases voltaram à faixa configurada.'); voltageWasBad = false } badge('energyBadge', bad.length ? 'Atenção: tensão' : 'Tensão normal', bad.length ? 'bad' : 'ok'); $('heroTitle').textContent = bad.length ? 'Verifique as fases elétricas' : 'Sistema em acompanhamento'; $('heroSub').textContent = bad.length ? bad.join(' • ') : 'Medições atualizadas automaticamente a cada poucos segundos.'; if (d.alarm && !alarmWas) addAlert('bad', 'Alarme acionado', 'O sensor de alarme do ESP32 foi ativado.'); if (!d.alarm && alarmWas) addAlert('', 'Alarme normalizado', 'O sensor de alarme voltou ao estado normal.'); alarmWas = !!d.alarm }
+    function daysText(mask) { return Number(mask) === 127 ? 'Todos os dias' : dayNames.filter((_, i) => Number(mask) & (1 << i)).join(', ') }
+
+
+    // -----------------------------------------------------------------------
+    // RELOGIO REMOTO - TICK LOCAL DE 1 SEGUNDO
+    // -----------------------------------------------------------------------
+    // O ESP continua sendo a fonte oficial da hora. Quando chega clock_local
+    // pelo MQTT, guardamos esse instante e o navegador apenas incrementa a
+    // exibicao a cada segundo entre uma resposta e outra.
+    //
+    // Usamos Date.UTC propositalmente para tratar "2026-09-25 00:55:24"
+    // como um conjunto de campos, sem aplicar o fuso do computador/celular.
+    function parseEspLocalClock(text) {
+      const m = String(text || '').match(
+        /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2}):(\d{2})/
+      );
+      if (!m) return 0;
+      return Date.UTC(
+        Number(m[1]),
+        Number(m[2]) - 1,
+        Number(m[3]),
+        Number(m[4]),
+        Number(m[5]),
+        Number(m[6])
+      );
+    }
+
+    function setRemoteClockBase(text, sourceText = 'Hora informada pelo ESP32') {
+      const parsed = parseEspLocalClock(text);
+      if (!parsed) {
+        remoteClockBaseMs = 0;
+        remoteClockReceivedAt = 0;
+        remoteClockSourceText = sourceText;
+        return;
+      }
+
+      remoteClockBaseMs = parsed;
+      remoteClockReceivedAt = Date.now();
+      remoteClockSourceText = sourceText;
+      tickRemoteClock();
+    }
+
+    function tickRemoteClock() {
+      if (!clockOk || !remoteClockBaseMs || !$('clockNow')) return;
+
+      const elapsed = Math.max(0, Date.now() - remoteClockReceivedAt);
+      const d = new Date(remoteClockBaseMs + elapsed);
+
+      const Y = d.getUTCFullYear();
+      const M = String(d.getUTCMonth() + 1).padStart(2, '0');
+      const D = String(d.getUTCDate()).padStart(2, '0');
+      const h = String(d.getUTCHours()).padStart(2, '0');
+      const m = String(d.getUTCMinutes()).padStart(2, '0');
+      const s = String(d.getUTCSeconds()).padStart(2, '0');
+
+      $('clockNow').textContent = `${Y}-${M}-${D} ${h}:${m}:${s}`;
+      $('clockSource').textContent =
+        (remoteClockSourceText || 'Hora informada pelo ESP32') +
+        ' · atualizando a cada 1 segundo';
+    }
+
+    function requestScheduleState() {
+      if (mqttConnected) publish('schedule/get', JSON.stringify({ request_id: 'app-' + Date.now() }));
+    }
+
+    function renderScheduleState(d) {
+      const sourceRows = Array.isArray(d.automations) ? d.automations : (Array.isArray(d.rules) ? d.rules : []);
+
+      rules = sourceRows.map(a => ({
+        id: Number(a.id || 0),
+        name: a.name || ('Automação ' + (a.id || '')),
+        enabled: a.enabled === true || Number(a.enabled) === 1,
+        device: a.target ? (String(a.target).toUpperCase() === 'LIGHT' ? 1 : 0) : Number(a.device || 0),
+        action: a.state ? (String(a.state).toUpperCase() === 'ON' ? 1 : 0) : Number(a.action || 0),
+        hour: Number(a.hour || 0),
+        minute: Number(a.minute || 0),
+        days: Number(a.days_mask ?? a.days ?? 0),
+        last_run_local: a.last_run_local || ''
+      }));
+
+      clockOk = d.clock_valid !== undefined ? !!d.clock_valid : !!d.clock_ok;
+      const clockText = d.clock_local || d.clock || '';
+
+      badge('clockBadge',
+        clockOk ? 'Relógio válido · UTC-3' : 'Relógio aguardando',
+        clockOk ? 'ok' : 'warn');
+
+      if (clockOk && clockText) {
+        setRemoteClockBase(clockText, 'Hora do ESP32 · Brasília UTC-3');
+      } else {
+        remoteClockBaseMs = 0;
+        remoteClockReceivedAt = 0;
+        $('clockNow').textContent = '--:--:--';
+        $('clockSource').textContent = 'Sem hora válida; automações ficam pausadas';
+      }
+
+      renderRules();
+      uiConnection(mqttConnected ? 'Broker conectado' : 'Desconectado', mqttConnected ? 'ok' : 'bad');
+    }
+
+    function renderRules() {
+      $('scheduleList').innerHTML = '';
+
+      const active = rules.filter(r => r.enabled);
+      if (!active.length) {
+        $('scheduleList').innerHTML = '<div class="empty">Nenhum horário ativo. Crie o primeiro ao lado.</div>';
+        return;
+      }
+
+      for (const r of active) {
+        const e = document.createElement('div');
+        e.className = 'schedule';
+
+        const detail = document.createElement('div');
+        const title = document.createElement('strong');
+        const sub = document.createElement('small');
+
+        title.textContent =
+          `${String(r.hour).padStart(2, '0')}:${String(r.minute).padStart(2, '0')} • ${r.action ? 'Ligar' : 'Desligar'} ${r.device ? 'luz' : 'bomba'}`;
+
+        sub.textContent =
+          `${r.name || ('Automação ' + r.id)} · ${daysText(r.days)}` +
+          (r.last_run_local ? ` · Última: ${r.last_run_local}` : '');
+
+        detail.append(title, sub);
+
+        const actions = document.createElement('div');
+        actions.className = 'actions';
+
+        const edit = document.createElement('button');
+        edit.className = 'secondary';
+        edit.textContent = 'Editar';
+        edit.onclick = () => editRule(r.id);
+
+        const del = document.createElement('button');
+        del.className = 'danger';
+        del.textContent = 'Pausar';
+        del.onclick = () => disableRule(r.id);
+
+        actions.append(edit, del);
+        e.append(detail, actions);
+        $('scheduleList').append(e);
+      }
+    }
+
+    function renderScheduleEvent(d) {
+      const target = String(d.target || '').toUpperCase();
+      const state = String(d.state || '').toUpperCase();
+      const device = target === 'LIGHT' ? 'luz' : 'bomba';
+      const action = state === 'OFF' ? 'desligar' : 'ligar';
+      const blocked = String(d.status || '').toUpperCase() === 'BLOQUEADO' ||
+        String(d.status || '').toLowerCase() === 'blocked';
+
+      if (blocked) {
+        addAlert(
+          'bad',
+          'Programação bloqueada',
+          `Automação ${d.id}: não foi possível ${action} ${device}. ${String(d.reason || 'Proteção ativa').replaceAll('_', ' ')}.`
+        );
+      } else {
+        addAlert(
+          '',
+          'Programação executada',
+          `Automação ${d.id}: comando para ${action} ${device} executado pelo ESP32.`
+        );
+      }
+
+      requestScheduleState();
+    }
+
+    function dayMask() {
+      return [...document.querySelectorAll('#days input')]
+        .reduce((mask, e) => mask | (e.checked ? (1 << Number(e.value)) : 0), 0);
+    }
+
+    function resetForm() {
+      editingId = null;
+      $('formTitle').textContent = 'Criar programação';
+      $('ruleName').value = '';
+      $('ruleTime').value = '07:00';
+      $('ruleDevice').value = '0';
+      $('ruleAction').value = '1';
+      document.querySelectorAll('#days input').forEach(e => e.checked = true);
+    }
+
+    function editRule(id) {
+      const r = rules.find(x => Number(x.id) === Number(id));
+      if (!r) return;
+
+      editingId = Number(id);
+      $('formTitle').textContent = 'Editar automação ' + id;
+      $('ruleName').value = r.name || '';
+      $('ruleTime').value = String(r.hour).padStart(2, '0') + ':' + String(r.minute).padStart(2, '0');
+      $('ruleDevice').value = String(r.device);
+      $('ruleAction').value = String(r.action);
+
+      document.querySelectorAll('#days input').forEach(
+        e => e.checked = !!(r.days & (1 << Number(e.value)))
+      );
+
+      toast('Edite e salve para atualizar no ESP32.');
+      page('schedule');
+    }
+
+    function saveRule() {
+      const parts = $('ruleTime').value.split(':').map(Number);
+      const days = dayMask();
+
+      if (parts.length !== 2 ||
+        !Number.isInteger(parts[0]) ||
+        parts[0] < 0 || parts[0] > 23 ||
+        parts[1] < 0 || parts[1] > 59 ||
+        !days) {
+        toast('Escolha horário válido e pelo menos um dia.');
+        return;
+      }
+
+      const device = Number($('ruleDevice').value);
+      const action = Number($('ruleAction').value);
+
+      const rule = {
+        id: editingId === null ? 0 : Number(editingId),
+        name: $('ruleName').value.trim() || (device ? 'Luz' : 'Bomba') + ' ' + $('ruleTime').value,
+        enabled: 1,
+        target: device ? 'LIGHT' : 'PUMP',
+        state: action ? 'ON' : 'OFF',
+        device,
+        action,
+        hour: parts[0],
+        minute: parts[1],
+        days_mask: days,
+        days
+      };
+
+      if (publish('schedule/set', JSON.stringify(rule))) {
+        toast('Programação enviada ao ESP32.');
+        resetForm();
+        setTimeout(requestScheduleState, 700);
+      }
+    }
+
+    function askConfirm(title, message, action, done) {
+      const dialog = $('confirmDialog');
+      if (!dialog) {
+        // Fallback para navegadores sem <dialog> ou caso a interface tenha sido alterada.
+        if (window.confirm(`${title}\n\n${message}`)) done();
+        return;
+      }
+
+      $('confirmTitle').textContent = title;
+      $('confirmMessage').textContent = message;
+      $('confirmAccept').textContent = action;
+
+      $('confirmCancel').onclick = () => dialog.close();
+      $('confirmAccept').onclick = () => {
+        dialog.close();
+        done();
+      };
+
+      if (typeof dialog.showModal === 'function') dialog.showModal();
+      else if (window.confirm(`${title}\n\n${message}`)) done();
+    }
+
+    function disableRule(id) {
+      const r = rules.find(x => Number(x.id) === Number(id));
+      if (!r) return;
+
+      askConfirm(
+        'Pausar automação',
+        `A automação ${r.name || id} deixará de executar no ESP32.`,
+        'Pausar',
+        () => {
+          if (publish('schedule/set', JSON.stringify({ id: Number(id), enabled: 0 }))) {
+            toast('Solicitação enviada ao ESP32.');
+            setTimeout(requestScheduleState, 700);
+          }
+        }
+      );
+    }
+
+    async function syncClockFromBrowser() {
+      const d = new Date();
+      const body = new URLSearchParams({
+        year: d.getFullYear(),
+        month: d.getMonth() + 1,
+        day: d.getDate(),
+        hour: d.getHours(),
+        minute: d.getMinutes(),
+        second: d.getSeconds()
+      });
+
+      try {
+        const response = await fetch('/api/clock/manual', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        toast('Hora do ESP ajustada com a hora deste aparelho.');
+        setTimeout(requestScheduleState, 500);
+      } catch (e) {
+        toast('Não consegui acessar a API local do ESP. Pela internet, aguarde a sincronização NTP.');
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // HISTORICO DA BOMBA VIA MQTT
+    // -----------------------------------------------------------------------
+    let historyRows = [];
+    let historyFiltered = [];
+    let historyRequestId = '';
+    let historyMap = null;
+    let historyLayer = null;
+
+    function historyNumber(v, fallback = 0) {
+      if (v === '' || v === null || v === undefined) return fallback;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : fallback;
+    }
+
+    function historyValidCoords(lat, lon) {
+      return Number.isFinite(lat) && Number.isFinite(lon) &&
+        lat >= -90 && lat <= 90 &&
+        lon >= -180 && lon <= 180 &&
+        !(lat === 0 && lon === 0);
+    }
+
+    function historyNormalize(r) {
+      const lat = historyNumber(r.lat ?? r.latitude, 0);
+      const lon = historyNumber(r.lon ?? r.lng ?? r.longitude, 0);
+      const locationValid = Boolean(r.location_valid) && historyValidCoords(lat, lon);
+
+      return {
+        id: Number(r.id || 0),
+        epoch: Number(r.epoch || 0),
+        time: r.time_local || r.time_utc || r.time || '',
+        state: String(r.state || 'OFF').toUpperCase() === 'ON' ? 'ON' : 'OFF',
+        source: String(r.source || 'DESCONHECIDO'),
+        status: String(r.status || 'EXECUTADO'),
+        reason: String(r.reason || ''),
+        lat,
+        lon,
+        accuracy: historyNumber(r.accuracy_m ?? r.accuracy, 0),
+        location_valid: locationValid
+      };
+    }
+
+    function historyHandleMessage(d) {
+      if (!d || typeof d !== 'object') return;
+      if (d.request_id && historyRequestId && d.request_id !== historyRequestId) return;
+
+      if (d.type === 'begin') {
+        historyRows = [];
+        badge('historyStatus', 'Recebendo…', 'warn');
+        historyUpdate();
+      } else if (d.type === 'event' && d.event) {
+        historyRows.push(historyNormalize(d.event));
+        historyUpdate(false);
+      } else if (d.type === 'end') {
+        historyRows.sort((a, b) => (b.epoch || b.id) - (a.epoch || a.id));
+        badge('historyStatus', `${historyRows.length} registros`, 'ok');
+        historyUpdate();
+      } else if (d.type === 'clear') {
+        if (d.ok) {
+          toast('Histórico apagado no ESP32.');
+          historyRequest(false);
+        } else {
+          toast(d.message || 'Falha ao apagar o histórico.');
+        }
+      }
+    }
+
+    function historyRequest(showToast = true) {
+      if (!mqttConnected) {
+        if (showToast) toast('Broker MQTT desconectado.');
+        return;
+      }
+
+      historyRequestId = 'hist-' + Date.now().toString(36) + '-' + Math.random().toString(16).slice(2, 7);
+      historyRows = [];
+      historyUpdate();
+
+      if (publish('pump/history/get', JSON.stringify({
+        request_id: historyRequestId,
+        limit: 60
+      }))) {
+        badge('historyStatus', 'Buscando…', 'warn');
+        if (showToast) toast('Solicitação de histórico enviada pelo MQTT.');
+      }
+    }
+
+    function historyUpdate(renderMap = true) {
+      $('histTotal').textContent = historyRows.length;
+      $('histGps').textContent = historyRows.filter(r => r.location_valid).length;
+      $('histOn').textContent = historyRows.filter(r => r.state === 'ON').length;
+      $('histOff').textContent = historyRows.filter(r => r.state === 'OFF').length;
+
+      historyApplyFilters();
+      if (renderMap) historyRenderMap();
+    }
+
+    function historyApplyFilters() {
+      const q = $('histSearch').value.trim().toLowerCase();
+      const state = $('histState').value;
+      const gps = $('histGpsFilter').value;
+
+      historyFiltered = historyRows.filter(r => {
+        if (state && r.state !== state) return false;
+        if (gps === 'yes' && !r.location_valid) return false;
+        if (gps === 'no' && r.location_valid) return false;
+
+        if (q) {
+          const bag = [
+            r.id, r.time, r.state, r.source,
+            r.status, r.reason, r.lat, r.lon
+          ].join(' ').toLowerCase();
+
+          if (!bag.includes(q)) return false;
+        }
+
+        return true;
+      });
+
+      historyRenderTable();
+    }
+
+    function historyFormatDate(r) {
+      if (r.time) {
+        // time_local do ESP ja e a fonte preferida.
+        if (/^\d{4}-\d\d-\d\d[T ]\d\d:\d\d:\d\d/.test(r.time)) {
+          return String(r.time).replace('T', ' ');
+        }
+
+        const d = new Date(r.time);
+        if (!Number.isNaN(d.getTime())) return d.toLocaleString('pt-BR');
+        return String(r.time);
+      }
+
+      if (r.epoch) {
+        const d = new Date(r.epoch * 1000);
+        if (!Number.isNaN(d.getTime())) return d.toLocaleString('pt-BR');
+      }
+
+      return '-';
+    }
+
+    function historyRenderTable() {
+      const tbody = $('historyRows');
+      tbody.innerHTML = '';
+      $('historyEmpty').style.display = historyFiltered.length ? 'none' : 'block';
+
+      for (const r of historyFiltered) {
+        const tr = document.createElement('tr');
+        const statusClass = String(r.status).toUpperCase().includes('BLOQ') ? 'blocked' :
+          (r.state === 'ON' ? 'on' : 'off');
+
+        tr.innerHTML = `
+          <td><strong>${r.id}</strong></td>
+          <td>${historyEscape(historyFormatDate(r))}</td>
+          <td><span class="state-chip ${r.state === 'ON' ? 'on' : 'off'}">${r.state}</span></td>
+          <td>${historyEscape(r.source)}</td>
+          <td>
+            <span class="state-chip ${statusClass}">${historyEscape(r.status)}</span>
+            ${r.reason ? `<div class="mini mt-1">${historyEscape(r.reason)}</div>` : ''}
+          </td>
+          <td>${r.location_valid ? r.lat.toFixed(6) : '0.000000'}</td>
+          <td>${r.location_valid ? r.lon.toFixed(6) : '0.000000'}</td>
+          <td>${r.location_valid ? r.accuracy.toFixed(1) + ' m' : '-'}</td>
+        `;
+
+        tbody.appendChild(tr);
+      }
+    }
+
+    function historyEscape(v) {
+      return String(v ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;');
+    }
+
+    function historyInitMap() {
+      if (historyMap || !$('historyMap')) return;
+
+      if (!window.L) {
+        $('historyMap').style.display = 'none';
+        if ($('historyMapFallback')) $('historyMapFallback').style.display = 'block';
+        return;
+      }
+
+      $('historyMap').style.display = 'block';
+      if ($('historyMapFallback')) $('historyMapFallback').style.display = 'none';
+
+      historyMap = L.map('historyMap').setView([-9.39, -40.50], 12);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(historyMap);
+
+      historyLayer = L.layerGroup().addTo(historyMap);
+    }
+
+    function historyRenderFallback(points) {
+      const box = $('historyMapFallback');
+      const svg = $('historyMapFallbackSvg');
+      if (!box || !svg) return;
+
+      $('historyMap').style.display = 'none';
+      box.style.display = 'block';
+      svg.innerHTML = '';
+
+      if (!points.length) {
+        svg.innerHTML = `
+          <text x="500" y="285" text-anchor="middle"
+                fill="#71839f" font-size="28" font-weight="700">
+            Nenhum ponto GPS registrado
+          </text>`;
+        return;
+      }
+
+      let minLat = Math.min(...points.map(p => p.lat));
+      let maxLat = Math.max(...points.map(p => p.lat));
+      let minLon = Math.min(...points.map(p => p.lon));
+      let maxLon = Math.max(...points.map(p => p.lon));
+
+      if (minLat === maxLat) { minLat -= 0.0005; maxLat += 0.0005; }
+      if (minLon === maxLon) { minLon -= 0.0005; maxLon += 0.0005; }
+
+      const width = 1000, height = 600, pad = 70;
+
+      for (const r of points) {
+        const x = pad + ((r.lon - minLon) / (maxLon - minLon)) * (width - pad * 2);
+        const y = height - pad - ((r.lat - minLat) / (maxLat - minLat)) * (height - pad * 2);
+        const color = r.state === 'ON' ? '#149f79' : '#df5267';
+
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', x);
+        circle.setAttribute('cy', y);
+        circle.setAttribute('r', 12);
+        circle.setAttribute('fill', color);
+        circle.setAttribute('stroke', '#ffffff');
+        circle.setAttribute('stroke-width', '4');
+
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', x + 18);
+        label.setAttribute('y', y + 5);
+        label.setAttribute('fill', '#182a48');
+        label.setAttribute('font-size', '18');
+        label.setAttribute('font-weight', '700');
+        label.textContent = `#${r.id} ${r.state}`;
+
+        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        title.textContent =
+          `Bomba ${r.state} | ${historyFormatDate(r)} | ${r.lat.toFixed(6)}, ${r.lon.toFixed(6)}`;
+
+        g.appendChild(circle);
+        g.appendChild(label);
+        g.appendChild(title);
+        svg.appendChild(g);
+      }
+    }
+
+    function historyRenderMap() {
+      const points = historyRows.filter(r => r.location_valid);
+
+      $('historyMapInfo').textContent =
+        points.length ? `${points.length} ponto(s) com localização.` :
+          'Nenhuma localização GPS registrada.';
+
+      historyInitMap();
+
+      if (!window.L || !historyMap || !historyLayer) {
+        historyRenderFallback(points);
+        return;
+      }
+
+      $('historyMap').style.display = 'block';
+      if ($('historyMapFallback')) $('historyMapFallback').style.display = 'none';
+
+      historyLayer.clearLayers();
+
+      if (!points.length) {
+        setTimeout(() => historyMap.invalidateSize(), 30);
+        return;
+      }
+
+      const bounds = [];
+
+      for (const r of points) {
+        const marker = L.circleMarker([r.lat, r.lon], {
+          radius: 8,
+          weight: 3,
+          color: '#fff',
+          fillColor: r.state === 'ON' ? '#149f79' : '#df5267',
+          fillOpacity: 1
+        });
+
+        marker.bindPopup(`
+          <strong>Bomba ${r.state}</strong><br>
+          ${historyEscape(r.source)}<br>
+          ${historyEscape(historyFormatDate(r))}<br>
+          ${r.lat.toFixed(6)}, ${r.lon.toFixed(6)}
+        `);
+
+        marker.addTo(historyLayer);
+        bounds.push([r.lat, r.lon]);
+      }
+
+      if (bounds.length === 1) historyMap.setView(bounds[0], 17);
+      else historyMap.fitBounds(bounds, { padding: [25, 25], maxZoom: 17 });
+
+      setTimeout(() => historyMap.invalidateSize(), 80);
+    }
+
+    function historyClearAll() {
+      askConfirm(
+        'Apagar histórico',
+        'Todos os registros de ligação, desligamento e localização da bomba serão removidos do ESP32.',
+        'Apagar',
+        () => {
+          historyRequestId = 'clear-' + Date.now().toString(36);
+          publish('pump/history/clear', JSON.stringify({
+            request_id: historyRequestId,
+            confirm: 'APAGAR'
+          }));
+        }
+      );
+    }
+
+    function historyExportCsv() {
+      if (!historyFiltered.length) {
+        toast('Não há registros para exportar.');
+        return;
+      }
+
+      const rowsCsv = [
+        ['id', 'data_hora_esp', 'estado', 'origem', 'status', 'motivo', 'latitude', 'longitude', 'precisao_m']
+      ];
+
+      historyFiltered.forEach(r => rowsCsv.push([
+        r.id,
+        historyFormatDate(r),
+        r.state,
+        r.source,
+        r.status,
+        r.reason,
+        r.lat,
+        r.lon,
+        r.accuracy
+      ]));
+
+      const csv = rowsCsv
+        .map(row => row.map(v => `"${String(v ?? '').replaceAll('"', '""')}"`).join(';'))
+        .join('\r\n');
+
+      const url = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'DMK_HISTORICO_BOMBA.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Localizacao usada somente no comando da bomba. O ESP32 salva os dados no historico.
+    // Em navegadores comuns, geolocation exige HTTPS ou um contexto seguro.
+    function getPumpLocation() {
+      return new Promise(resolve => {
+        if (!navigator.geolocation) { resolve(null); return; }
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve({
+            lat: Number(pos.coords.latitude),
+            lon: Number(pos.coords.longitude),
+            accuracy_m: Number(pos.coords.accuracy || 0)
+          }),
+          () => resolve(null),
+          { enableHighAccuracy: true, timeout: 8000, maximumAge: 15000 }
+        );
+      });
+    }
+
+    async function sendPumpCommand(state) {
+      toast('Verificando localização do celular…');
+      const location = await getPumpLocation();
+      const payload = {
+        state,
+        source: 'APP_MQTT',
+        request_id: 'app-' + Date.now().toString(36),
+        sent_at: new Date().toISOString()
+      };
+      if (location) {
+        Object.assign(payload, location);
+        payload.location_valid = true;
+      } else {
+        payload.location_valid = false;
+        payload.lat = 0.0;
+        payload.lon = 0.0;
+        payload.accuracy_m = 0.0;
+      }
+
+      if (publish('pump/set', JSON.stringify(payload))) {
+        toast(location
+          ? 'Comando enviado com localização. Aguardando novo estado…'
+          : 'Comando enviado sem localização. O ESP32 registrará essa informação.');
+      }
+    }
+
+    function control(which) {
+      const on = which === 'pump' ? pumpOn : lightOn;
+      const label = which === 'pump' ? 'bomba' : 'luz';
+      askConfirm(
+        `${on ? 'Desligar' : 'Ligar'} ${label}`,
+        `Deseja realmente ${on ? 'desligar' : 'ligar'} ${label} agora? O estado será confirmado pelo ESP32.`,
+        on ? 'Desligar' : 'Ligar',
+        async () => {
+          const state = on ? 'OFF' : 'ON';
+          if (which === 'pump') await sendPumpCommand(state);
+          else if (publish('light/set', state)) toast('Comando enviado. Aguardando novo estado…');
+        }
+      );
+    }
+    $('pumpButton').onclick = () => control('pump'); $('lightButton').onclick = () => control('light'); $('saveRule').onclick = saveRule; $('cancelRule').onclick = resetForm;
+    $('refreshSchedule').onclick = requestScheduleState;
+    $('syncClockButton').onclick = syncClockFromBrowser;
+    $('historyRefresh').onclick = () => historyRequest(true);
+    $('historyClear').onclick = historyClearAll;
+    $('historyCsv').onclick = historyExportCsv;
+    $('histSearch').oninput = historyApplyFilters;
+    $('histState').onchange = historyApplyFilters;
+    $('histGpsFilter').onchange = historyApplyFilters;
+    $('connectButton').onclick = () => { const broker = $('broker').value.trim(), topic = $('topic').value.trim().replace(/\/+$/, ''); if (!/^wss?:\/\//.test(broker) || !topic) { toast('Informe um WebSocket ws:// ou wss:// e o tópico base.'); return } setItem('energyBrokerWs', broker); setItem('energyTopicBase', topic); setItem('energyMqttUser', $('user').value.trim()); setItem('energyMqttPass', $('pass').value); connect(); page('home'); toast('Conexão atualizada.') };
+    $('notifyButton').onclick = async () => { if (!('Notification' in window)) { toast('Este navegador não oferece notificações. Os avisos internos continuam ativos.'); return } try { const result = await Notification.requestPermission(); toast(result === 'granted' ? 'Notificações ativadas enquanto o aplicativo estiver aberto.' : 'Permissão não concedida; avisos internos continuam ativos.') } catch { toast('Notificações indisponíveis neste contexto.') } };
+    $('clearAlerts').onclick = () => askConfirm('Limpar avisos', 'Isso remove apenas o histórico deste navegador. Os dados do ESP32 não serão alterados.', 'Limpar', () => { alerts = []; setItem('energyAlertsV72', '[]'); renderAlerts(); toast('Histórico limpo.') });
+    const originalRenderControls = renderControls;
+    renderControls = function () { originalRenderControls(); $('homeDevices').textContent = `Bomba ${pumpOn ? 'ligada' : 'desligada'} • Luz ${lightOn ? 'ligada' : 'desligada'}` };
+    const originalRenderTelemetry = renderTelemetry;
+    renderTelemetry = function (d) {
+      originalRenderTelemetry(d);
+      $('homeTemp').textContent = $('tileTemp').textContent = $('temperature').textContent;
+      $('homeCurrent').textContent = $('tileCurrent').textContent = $('current').textContent;
+      $('tileFlow').textContent = $('flow').textContent;
+      $('tileRain').textContent = $('rain').textContent;
+      $('tileAlarm').textContent = $('alarm').textContent;
+      for (const phase of ['R', 'S', 'T']) { $('s' + phase).className = 'badge ' + ($('s' + phase).textContent === 'Normal' ? 'ok' : 'bad') }
+    };
+    for (let i = 0; i < 7; i++) { const l = document.createElement('label'), c = document.createElement('input'); c.type = 'checkbox'; c.value = i; c.checked = true; l.append(c, document.createTextNode(dayNames[i])); $('days').append(l) }
+    try { alerts = JSON.parse(getItem('energyAlertsV72', '[]')); if (!Array.isArray(alerts)) alerts = [] } catch { alerts = [] }
+    renderAlerts();
+    const initial = cfg();
+    for (const k of ['broker', 'topic', 'user', 'pass']) $(k).value = initial[k];
+    resetForm();
+    connect();
+
+    // Atualiza visualmente o relogio remoto a cada segundo sem gerar
+    // uma requisicao MQTT por segundo. A fonte continua sendo o ESP32.
+    setInterval(tickRemoteClock, 1000);
+
+    // Mantém relógio/agenda ressincronizados sem depender apenas do retained.
+    setInterval(() => {
+      if (mqttConnected) requestScheduleState();
+    }, 15000);
+
+    setInterval(() => {
+      if (telemetrySeen && Date.now() - lastTelemetry > 12000) {
+        telemetrySeen = false;
+        uiConnection('Dados atrasados', 'warn');
+      }
+    }, 3000);
+  </script>
+<a href="OTA-MQTT.html" style="position:fixed;right:12px;bottom:14px;z-index:1000;background:#123d5a;color:white;padding:12px;border-radius:12px;text-decoration:none">Atualizar placas</a></body>
+
+</html>

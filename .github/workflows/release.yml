@@ -1,0 +1,62 @@
+# Compila as 6 placas e publica uma Release com os .bin + manifest.json.
+# Dispara quando o DMK.bat envia uma tag "dmk-s<SERVE>-c<CONTROLE>".
+# Tambem pode ser rodado a mao (aba Actions) so para testar a compilacao.
+name: Compilar e publicar DMK Smart
+
+on:
+  push:
+    tags: ["dmk-*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  firmware:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache do PlatformIO
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.platformio
+            ~/.cache/pip
+          key: pio-${{ runner.os }}-${{ hashFiles('platformio.ini') }}
+
+      - name: Instalar PlatformIO
+        run: pip install --upgrade platformio
+
+      - name: Compilar SERVE e CONTROLE (ESP32, ESP32-S3, ESP8266)
+        env:
+          DMK_GITHUB_REPO: ${{ github.repository }}
+        run: |
+          rm -rf dist
+          pio run -e SERVE_ESP32 -e SERVE_ESP32S3 -e SERVE_ESP8266 \
+                  -e CONTROLE_ESP32 -e CONTROLE_ESP32S3 -e CONTROLE_ESP8266
+
+      - name: Montar manifesto da versao
+        run: python scripts/dmk.py manifest --repo "${{ github.repository }}" --tag "${{ github.ref_name }}"
+
+      - name: Guardar arquivos (teste manual)
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: dmk-firmwares
+          path: dist/
+
+      - name: Publicar Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "DMK Smart ${{ github.ref_name }}"
+          body_path: dist/NOTAS.md
+          files: |
+            dist/*.bin
+            dist/manifest.json
+          make_latest: true

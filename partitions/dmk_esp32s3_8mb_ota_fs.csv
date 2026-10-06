@@ -1,0 +1,7 @@
+# DMK_META {"name":"ESP32-S3 8 MB - OTA + LittleFS balanceado","flashMB":8,"ota":true,"recommended":true,"notes":"2 slots OTA de 3072 KB e LittleFS de 1984 KB. Não é aplicado automaticamente ao S3 atual."}
+# Name,   Type, SubType, Offset,   Size,     Flags
+nvs,      data, nvs,     0x9000,   0x5000,
+otadata,  data, ota,     0xE000,   0x2000,
+app0,     app,  ota_0,   0x10000,  0x300000,
+app1,     app,  ota_1,   0x310000, 0x300000,
+littlefs, data, spiffs,  0x610000, 0x1F0000,
